@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mall.base.dao.ShopcartMapper" >
+  <select id="getList" resultType="mall.base.model.Shopcart" parameterType="mall.base.model.Shopcart" >
+    select * from shopcart
+    where 1=1
+    <if test="shopcartid != null" >
+      and shopcartId = #{shopcartid}
+    </if>
+    <if test="userid != null" >
+      and userId = #{userid}
+    </if>
+    <if test="goodsid != null" >
+      and goodsId = #{goodsid}
+    </if>
+    <if test="shopcartcount != null" >
+      and shopcartCount = #{shopcartcount}
+    </if>
+  </select>
+  
+  <select id="getSingle" resultType="mall.base.model.Shopcart" >
+    select * from shopcart
+    where shopcartId = #{id}
+    limit 0,1
+  </select>
+  
+  <insert id="insert" parameterType="mall.base.model.Shopcart" >
+    insert into shopcart
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="shopcartid != null" >
+        shopcartId,
+      </if>
+      <if test="userid != null" >
+        userId,
+      </if>
+      <if test="goodsid != null" >
+        goodsId,
+      </if>
+      <if test="shopcartcount != null" >
+        shopcartCount
+      </if>
+    </trim>
+    <trim prefix="values(" suffix=")" suffixOverrides="," >
+      <if test="shopcartid != null" >
+        #{shopcartid},
+      </if>
+      <if test="userid != null" >
+        #{userid},
+      </if>
+      <if test="goodsid != null" >
+        #{goodsid},
+      </if>
+      <if test="shopcartcount != null" >
+        #{shopcartcount}
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="update" parameterType="mall.base.model.Shopcart" >
+    update shopcart
+    <set >
+      <if test="userid != null" >
+        userId = #{userid},
+      </if>
+      <if test="goodsid != null" >
+        goodsId = #{goodsid},
+      </if>
+      <if test="shopcartcount != null" >
+        shopcartCount = #{shopcartcount}
+      </if>
+    </set>
+    where
+    shopcartId = #{shopcartid}
+  </update>
+  
+  <delete id="batchDelete" >
+    delete from shopcart
+    where shopcartId in(
+    <foreach item="item" collection="list" separator="," >
+      #{item}
+    </foreach>
+    )
+  </delete>
+  
+  <select id="getListWithPage" resultType="mall.base.model.Shopcart" parameterType="mall.base.model.Shopcart" >
+    select * from shopcart
+    where 1=1
+    <if test="shopcartid != null" >
+      and shopcartId = #{shopcartid}
+    </if>
+    <if test="userid != null" >
+      and userId = #{userid}
+    </if>
+    <if test="goodsid != null" >
+      and goodsId = #{goodsid}
+    </if>
+    <if test="shopcartcount != null" >
+      and shopcartCount = #{shopcartcount}
+    </if>
+  </select>
+  
+  <select id="count" resultType="java.lang.Long" parameterType="mall.base.model.Shopcart" >
+    select count(*) from shopcart
+    where 1=1
+    <if test="shopcartid != null" >
+      and shopcartId = #{shopcartid}
+    </if>
+    <if test="userid != null" >
+      and userId = #{userid}
+    </if>
+    <if test="goodsid != null" >
+      and goodsId = #{goodsid}
+    </if>
+    <if test="shopcartcount != null" >
+      and shopcartCount = #{shopcartcount}
+    </if>
+  </select>
+  
+</mapper>

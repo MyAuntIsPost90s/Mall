@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mall.base.dao.GoodsMapper" >
+  <select id="getList" resultType="mall.base.model.Goods" parameterType="mall.base.model.Goods" >
+    select * from goods
+    where 1=1
+    <if test="goodsid != null" >
+      and goodsId = #{goodsid}
+    </if>
+    <if test="goodsname != null" >
+      and goodsName = #{goodsname}
+    </if>
+    <if test="goodscost != null" >
+      and goodsCost = #{goodscost}
+    </if>
+    <if test="goodsprice != null" >
+      and goodsPrice = #{goodsprice}
+    </if>
+    <if test="goodscount != null" >
+      and goodsCount = #{goodscount}
+    </if>
+    <if test="goodstime != null" >
+      and goodsTime = #{goodstime}
+    </if>
+    <if test="goodspercentage != null" >
+      and goodsPercentage = #{goodspercentage}
+    </if>
+    <if test="goodskindid != null" >
+      and goodsKindId = #{goodskindid}
+    </if>
+    <if test="goodsimgurl != null" >
+      and goodsImgUrl = #{goodsimgurl}
+    </if>
+    <if test="goodscontents != null" >
+      and goodsContents = #{goodscontents}
+    </if>
+  </select>
+  
+  <select id="getSingle" resultType="mall.base.model.Goods" >
+    select * from goods
+    where goodsId = #{id}
+    limit 0,1
+  </select>
+  
+  <insert id="insert" parameterType="mall.base.model.Goods" >
+    insert into goods
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="goodsid != null" >
+        goodsId,
+      </if>
+      <if test="goodsname != null" >
+        goodsName,
+      </if>
+      <if test="goodscost != null" >
+        goodsCost,
+      </if>
+      <if test="goodsprice != null" >
+        goodsPrice,
+      </if>
+      <if test="goodscount != null" >
+        goodsCount,
+      </if>
+      <if test="goodstime != null" >
+        goodsTime,
+      </if>
+      <if test="goodspercentage != null" >
+        goodsPercentage,
+      </if>
+      <if test="goodskindid != null" >
+        goodsKindId,
+      </if>
+      <if test="goodsimgurl != null" >
+        goodsImgUrl,
+      </if>
+      <if test="goodscontents != null" >
+        goodsContents
+      </if>
+    </trim>
+    <trim prefix="values(" suffix=")" suffixOverrides="," >
+      <if test="goodsid != null" >
+        #{goodsid},
+      </if>
+      <if test="goodsname != null" >
+        #{goodsname},
+      </if>
+      <if test="goodscost != null" >
+        #{goodscost},
+      </if>
+      <if test="goodsprice != null" >
+        #{goodsprice},
+      </if>
+      <if test="goodscount != null" >
+        #{goodscount},
+      </if>
+      <if test="goodstime != null" >
+        #{goodstime},
+      </if>
+      <if test="goodspercentage != null" >
+        #{goodspercentage},
+      </if>
+      <if test="goodskindid != null" >
+        #{goodskindid},
+      </if>
+      <if test="goodsimgurl != null" >
+        #{goodsimgurl},
+      </if>
+      <if test="goodscontents != null" >
+        #{goodscontents}
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="update" parameterType="mall.base.model.Goods" >
+    update goods
+    <set >
+      <if test="goodsname != null" >
+        goodsName = #{goodsname},
+      </if>
+      <if test="goodscost != null" >
+        goodsCost = #{goodscost},
+      </if>
+      <if test="goodsprice != null" >
+        goodsPrice = #{goodsprice},
+      </if>
+      <if test="goodscount != null" >
+        goodsCount = #{goodscount},
+      </if>
+      <if test="goodstime != null" >
+        goodsTime = #{goodstime},
+      </if>
+      <if test="goodspercentage != null" >
+        goodsPercentage = #{goodspercentage},
+      </if>
+      <if test="goodskindid != null" >
+        goodsKindId = #{goodskindid},
+      </if>
+      <if test="goodsimgurl != null" >
+        goodsImgUrl = #{goodsimgurl},
+      </if>
+      <if test="goodscontents != null" >
+        goodsContents = #{goodscontents}
+      </if>
+    </set>
+    where
+    goodsId = #{goodsid}
+  </update>
+  
+  <delete id="batchDelete" >
+    delete from goods
+    where goodsId in(
+    <foreach item="item" collection="list" separator="," >
+      #{item}
+    </foreach>
+    )
+  </delete>
+  
+  <select id="getListWithPage" resultType="mall.base.model.Goods" parameterType="mall.base.model.Goods" >
+    select * from goods
+    where 1=1
+    <if test="goodsid != null" >
+      and goodsId = #{goodsid}
+    </if>
+    <if test="goodsname != null" >
+      and goodsName = #{goodsname}
+    </if>
+    <if test="goodscost != null" >
+      and goodsCost = #{goodscost}
+    </if>
+    <if test="goodsprice != null" >
+      and goodsPrice = #{goodsprice}
+    </if>
+    <if test="goodscount != null" >
+      and goodsCount = #{goodscount}
+    </if>
+    <if test="goodstime != null" >
+      and goodsTime = #{goodstime}
+    </if>
+    <if test="goodspercentage != null" >
+      and goodsPercentage = #{goodspercentage}
+    </if>
+    <if test="goodskindid != null" >
+      and goodsKindId = #{goodskindid}
+    </if>
+    <if test="goodsimgurl != null" >
+      and goodsImgUrl = #{goodsimgurl}
+    </if>
+    <if test="goodscontents != null" >
+      and goodsContents = #{goodscontents}
+    </if>
+  </select>
+  
+  <select id="count" resultType="java.lang.Long" parameterType="mall.base.model.Goods" >
+    select count(*) from goods
+    where 1=1
+    <if test="goodsid != null" >
+      and goodsId = #{goodsid}
+    </if>
+    <if test="goodsname != null" >
+      and goodsName = #{goodsname}
+    </if>
+    <if test="goodscost != null" >
+      and goodsCost = #{goodscost}
+    </if>
+    <if test="goodsprice != null" >
+      and goodsPrice = #{goodsprice}
+    </if>
+    <if test="goodscount != null" >
+      and goodsCount = #{goodscount}
+    </if>
+    <if test="goodstime != null" >
+      and goodsTime = #{goodstime}
+    </if>
+    <if test="goodspercentage != null" >
+      and goodsPercentage = #{goodspercentage}
+    </if>
+    <if test="goodskindid != null" >
+      and goodsKindId = #{goodskindid}
+    </if>
+    <if test="goodsimgurl != null" >
+      and goodsImgUrl = #{goodsimgurl}
+    </if>
+    <if test="goodscontents != null" >
+      and goodsContents = #{goodscontents}
+    </if>
+  </select>
+  
+  <select id="searchWithPage" resultType="mall.base.model.Goods" >
+    select * from goods
+    where 1=1
+    <if test="goodsname != null" >
+      and goodsName like CONCAT('%',#{goodsname},'%')
+    </if>
+    <if test="goodskindid != null" >
+      and goodsKindId = #{goodskindid}
+    </if>
+	<if test="orderType == 1">
+		order by goodsPrice asc
+	</if>
+	<if test="orderType == 2">
+		order by goodsTime desc
+	</if>
+  </select>
+  
+</mapper>

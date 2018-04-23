@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>轮播图列表</title>
+    <link rel="stylesheet" href="../../Contents/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="../../Contents/lib/easyui-theme/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../../Contents/lib/easyui-theme/themes/insdep/icon.css">
+    <script src="../../Contents/js/config.js"></script>
+    <script src="../../Contents/js/jquery.min.js"></script>
+    <script src="../../Contents/lib/easyui-theme/jquery.easyui.min.js"></script>
+    <script src="../../Contents/lib/easyui-theme/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../../Contents/js/easyui.util.js"></script>
+    <script src="../../Contents/lib/lingshiframework/lingshi_base.js"></script>
+    <script src="../../Contents/js/md5.js"></script>
+    <script src="../../Contents/js/layui.util.js"></script>
+</head>
+<body>
+<div class="easyui-layout" data-options='fit:"true"'>
+    <table id="table-banner"></table>
+</div>
+<script id="lay-bannerform" type="text/html">
+    <div style="padding: 10px;">
+        <form class="layui-form layui-form-pane" id="form-banner">
+            <input id="opt-type" type="hidden" name="type" />
+            <input type="hidden" name="bannerid" />
+            <div class="layui-form-item">
+                <img id="img-bannerurl" data-src="" src="../../Contents/images/dftbanner.png" height="130" width="290" />
+            </div>
+            <div class="layui-form-item">
+                <button type="button" class="layui-btn" id="btn-bannerurl">
+                    <i class="layui-icon">&#xe67c;</i>上传轮播图
+                </button>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">链接</label>
+                <div class="layui-input-block">
+                    <input type="text" name="bannerlink" required placeholder="http:\\www.xxx.com" data-valid="name:'链接',length:[1,200]" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">背景色代码</label>
+                <div class="layui-input-block">
+                    <input type="text" name="bannercolorcode" required placeholder="#ffffff" data-valid="name:'背景色代码',length:[1,20]" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item" style="text-align: right">
+                <button type="button" class="layui-btn" onclick="save()">保存</button>
+            </div>
+        </form>
+    </div>
+</script>
+<script src="../../Contents/lib/layui/layui.all.js"></script>
+<script>
+    $(function () {
+        initDataGrid();
+    })
+
+    //保存
+    function save() {
+        var postData=FormUtil.getFormMap("#form-banner");
+        if(postData==null||postData==''){
+            return;
+        }
+        postData.bannerimgurl=$('#img-bannerurl').attr('data-src');
+        if(postData.bannerimgurl==null||postData.bannerimgurl==''){
+            layer.msg('请上传一张轮播图');
+            return;
+        }
+
+        var url=Config.UrlHead+'/banner/add';
+        if(postData.type=='edit'){
+            url=Config.UrlHead+'/banner/update';
+        }
+        $.post(url
+            ,postData
+            ,function (data) {
+                if(data.code==1){
+                    layer.closeAll();
+                }
+                layer.msg(data.msg);
+                $('#table-banner').datagrid('reload');
+            },'json')
+    }
+
+    //批量删除
+    function batchDelete() {
+        var rows = $('#table-banner').datagrid('getChecked');
+        if (rows.length < 1) {
+            return;
+        }
+        var ids = [];
+        for (var i = 0; i < rows.length; i++) {
+            ids.push(rows[i].bannerid);
+        }
+        layer.confirm("是否确定删除", function (index) {
+            $.ajax({
+                url: Config.UrlHead + '/banner/batchDelete',
+                contentType: "application/json ; charset=utf-8",
+                data: JSON.stringify(ids),
+                method: 'post',
+                dataType: 'json',
+                success: function (data) {
+                    layer.close(index);
+                    layer.msg(data.msg);
+                    $('#table-banner').datagrid('reload');
+                }
+            });
+        }, function (index) {
+            layer.close(index);
+        });
+    }
+
+    //点击删除事件
+    function del(id) {
+        var ids = [];
+        ids.push(id);
+        layer.confirm("是否确定删除", function (index) {
+            $.ajax({
+                url: Config.UrlHead + '/banner/batchDelete',
+                contentType: "application/json ; charset=utf-8",
+                data: JSON.stringify(ids),
+                method: 'post',
+                dataType: 'json',
+                success: function (data) {
+                    layer.close(index);
+                    layer.msg(data.msg);
+                    $('#table-banner').datagrid('reload');
+                }
+            });
+        }, function (index) {
+            layer.close(index);
+        });
+    }
+
+    //展示添加
+    function showAddBanner() {
+        layer.open({
+            type:1
+            ,title:'添加轮播图'
+            ,content:$('#lay-bannerform').html()
+            ,success:function(){
+                FormUtil.loadForm('#form-banner',{type:'add'});
+                layui.form.render();
+
+                initUploader();
+            }
+        })
+    }
+
+    //展示编辑框
+    function showEdit(id){
+        var index = layer.open({type:3});
+        $.post(Config.UrlHead+'/banner/single'
+            ,{bannerid:id}
+            ,function (data) {
+                layer.close(index);
+                layer.open({
+                    type:1
+                    ,title:'修改轮播图'
+                    ,content:$('#lay-bannerform').html()
+                    ,success:function(){
+                        data.data.type='edit';
+                        if(data.code==1){
+                            if(data.data.bannerimgurl!=''){
+                                $('#img-bannerurl').attr("data-src", data.data.bannerimgurl);
+                                $('#img-bannerurl').attr("src",Config.UrlHead + data.data.bannerimgurl);
+                            }
+                            FormUtil.loadForm('#form-banner',data.data);
+                        }else {
+                            layer.msg(data.msg);
+                        }
+                        layui.form.render();
+                        initUploader();
+                    }
+                })
+            },'json');
+    }
+
+    //初始化表格数据
+    function initDataGrid() {
+        EasyUIUtil.initDataGrid('#table-banner', Config.UrlHead + "/banner/list",getColumns());
+        var pager=$('#table-banner').datagrid('getPager');
+        pager.pagination({
+            showPageList: true,
+            buttons: [{
+                iconCls: 'icon-add',
+                handler: function () {
+                    showAddBanner();
+                }
+            }, {
+                iconCls: 'icon-remove',
+                handler: function () {
+                    batchDelete();
+                }
+            }],
+            onBeforeRefresh: function () {
+                return true;
+            }
+        });
+    }
+
+    //获取列
+    function getColumns(){
+        var columns=[[
+            {field:'ck',checkbox:true},
+            {
+                field:'bannerid',
+                width:50,
+                align:'center',
+                title:"操作",
+                formatter:function(val,row){
+                    return '<button class="layui-btn layui-btn-xs layui-btn-danger" onclick="del(\'' + val + '\')"><i class="layui-icon">&#xe640;</i>移除</button>'
+                        +'<button class="layui-btn layui-btn-xs" onclick="showEdit(\'' + val + '\')"><i class="layui-icon">&#xe642;</i>编辑</button>'
+                }
+            },
+            {
+                field:'bannerimgurl',
+                width:50,
+                align:'center',
+                title:"轮播图",
+                formatter:function(val,row){
+                    return '<img src="'+ Config.UrlHead + val +'" width="180" height="90">';
+                }
+            },
+            {
+                field:'bannercolorcode',
+                width:50,
+                align:'center',
+                title:"背景色",
+                formatter:function(val,row){
+                    return '<div class="layui-inline" style="border:1px solid #b8b8b8;width: 12px;height: 12px;background-color: '+val+'"></div>';
+                }
+            },
+            {field:'bannerlink',width:100,align:'center',title:"跳转链接"}
+        ]];
+        return columns;
+    }
+
+    //初始化轮播图上传组件
+    function initUploader() {
+        layui.upload.render({
+            elem: '#btn-bannerurl' //绑定元素
+            , accept: 'images'
+            , data: {basePath:'/Uploadfile/banner/'}
+            , url: Config.UrlHead + '/uploader/upload' //上传接口
+            , done: function (res) {
+                $('#img-bannerurl').attr("data-src", res.data);
+                $('#img-bannerurl').attr("src",Config.UrlHead + res.data);
+            }
+        });
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>商品列表</title>
+    <link rel="stylesheet" href="../../Contents/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="../../Contents/lib/easyui-theme/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../../Contents/lib/easyui-theme/themes/insdep/icon.css">
+    <script src="../../Contents/js/config.js"></script>
+    <script src="../../Contents/js/jquery.min.js"></script>
+    <script src="../../Contents/lib/easyui-theme/jquery.easyui.min.js"></script>
+    <script src="../../Contents/lib/easyui-theme/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../../Contents/js/easyui.util.js"></script>
+    <script src="../../Contents/lib/lingshiframework/lingshi_base.js"></script>
+    <script src="../../Contents/js/md5.js"></script>
+    <script src="../../Contents/js/layui.util.js"></script>
+</head>
+<body>
+<div class="easyui-layout" data-options='fit:"true"'>
+    <div data-options='region:"west"' style="width: 200px">
+        <ul id="tree-goodskind"></ul>
+    </div>
+    <div data-options='region:"center"'>
+        <table id="table-goods"></table>
+    </div>
+</div>
+<script id="lay-goodsform" type="text/html">
+    <div style="padding: 10px;">
+        <form class="layui-form layui-form-pane" id="form-goods">
+            <input id="opt-type" type="hidden" name="type" />
+            <input type="hidden" name="goodsid" />
+            <div class="layui-form-item">
+                <label class="layui-form-label">名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="goodsname" required  lay-verify="username" placeholder="请输入名称" data-valid="name:'名称',length:[1,20]" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item" style="text-align: right">
+                <button type="button" class="layui-btn" onclick="save()">保存</button>
+            </div>
+        </form>
+    </div>
+</script>
+<script src="../../Contents/lib/layui/layui.all.js"></script>
+<script>
+    var goodskindid='-1';
+    $(function () {
+        initDataGrid();
+        initDataGrid();
+        EasyUIUtil.initTree('#tree-goodskind', Config.UrlHead + '/goodsKind/tree');  //加载树
+        $('#tree-goodskind').tree({
+            onClick:function(node){
+                goodskindid=node.id;
+                initDataGrid();
+            }
+        })
+    })
+
+    //批量删除
+    function batchDelete() {
+        var rows = $('#table-goods').datagrid('getChecked');
+        if (rows.length < 1) {
+            return;
+        }
+        var ids = [];
+        for (var i = 0; i < rows.length; i++) {
+            ids.push(rows[i].goodsid);
+        }
+        layer.confirm("是否确定删除", function (index) {
+            $.ajax({
+                url: Config.UrlHead + '/goods/batchDelete',
+                contentType: "application/json ; charset=utf-8",
+                data: JSON.stringify(ids),
+                method: 'post',
+                dataType: 'json',
+                success: function (data) {
+                    layer.close(index);
+                    layer.msg(data.msg);
+                    $('#table-goods').datagrid('reload');
+                }
+            });
+        }, function (index) {
+            layer.close(index);
+        });
+    }
+
+    //展示编辑页
+    function showEdit(id){
+        if(goodskindid==''||goodskindid=='-1'){
+            layer.msg('请先选择一个分类');
+            return;
+        }
+        window.open('edit.html?type=edit&&goodsid='+id);
+    }
+
+    //点击删除事件
+    function del(id) {
+        var ids = [];
+        ids.push(id);
+        layer.confirm("是否确定删除", function (index) {
+            $.ajax({
+                url: Config.UrlHead + '/goods/batchDelete',
+                contentType: "application/json ; charset=utf-8",
+                data: JSON.stringify(ids),
+                method: 'post',
+                dataType: 'json',
+                success: function (data) {
+                    layer.close(index);
+                    layer.msg(data.msg);
+                    $('#table-goods').datagrid('reload');
+                }
+            });
+        }, function (index) {
+            layer.close(index);
+        });
+    }
+
+    //初始化表格数据
+    function initDataGrid() {
+        EasyUIUtil.initDataGrid('#table-goods', Config.UrlHead + "/goods/list",getColumns(),{goodskindid:goodskindid});
+        var pager=$('#table-goods').datagrid('getPager');
+        pager.pagination({
+            showPageList: true,
+            buttons: [{
+                iconCls: 'icon-add',
+                handler: function () {
+                    if(goodskindid==''||goodskindid=='-1'){
+                        layer.msg('请先选择一个分类');
+                        return;
+                    }
+                    window.open('edit.html?type=add&goodskindid='+goodskindid);
+                }
+            }, {
+                iconCls: 'icon-remove',
+                handler: function () {
+                    batchDelete();
+                }
+            }],
+            onBeforeRefresh: function () {
+                return true;
+            }
+        });
+    }
+
+    //获取列
+    function getColumns(){
+        var columns=[[
+            {field:'ck',checkbox:true},
+            {
+                field:'goodsid',
+                width:100,
+                align:'center',
+                title:"操作",
+                formatter:function(val,row){
+                    return '<button class="layui-btn layui-btn-xs layui-btn-danger" onclick="del(\'' + val + '\')"><i class="layui-icon">&#xe640;</i>移除</button>'
+                        +'<button class="layui-btn layui-btn-xs" onclick="showEdit(\'' + val + '\')"><i class="layui-icon">&#xe642;</i>编辑</button>'
+                }
+            },
+            {field:'goodsname',width:100,align:'center',title:"名称"},
+            {field:'goodscount',width:50,align:'center',title:"数量"},
+            {field:'goodscost',width:50,align:'center',title:"成本"},
+            {field:'goodsprice',width:50,align:'center',title:"售价"},
+            {field:'goodspercentage',width:50,align:'center',title:"提成"}
+        ]];
+        return columns;
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mall.base.dao.SyslogMapper" >
+  <select id="getList" resultType="mall.base.model.Syslog" parameterType="mall.base.model.Syslog" >
+    select * from syslog
+    where 1=1
+    <if test="syslogid != null" >
+      and sysLogId = #{syslogid}
+    </if>
+    <if test="syslogcontent != null" >
+      and sysLogContent = #{syslogcontent}
+    </if>
+    <if test="syslogtime != null" >
+      and sysLogTime = #{syslogtime}
+    </if>
+    <if test="userid != null" >
+      and userId = #{userid}
+    </if>
+  </select>
+  
+  <select id="getSingle" resultType="mall.base.model.Syslog" >
+    select * from syslog
+    where sysLogId = #{id}
+    limit 0,1
+  </select>
+  
+  <insert id="insert" parameterType="mall.base.model.Syslog" >
+    insert into syslog
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="syslogid != null" >
+        sysLogId,
+      </if>
+      <if test="syslogcontent != null" >
+        sysLogContent,
+      </if>
+      <if test="syslogtime != null" >
+        sysLogTime,
+      </if>
+      <if test="userid != null" >
+        userId
+      </if>
+    </trim>
+    <trim prefix="values(" suffix=")" suffixOverrides="," >
+      <if test="syslogid != null" >
+        #{syslogid},
+      </if>
+      <if test="syslogcontent != null" >
+        #{syslogcontent},
+      </if>
+      <if test="syslogtime != null" >
+        #{syslogtime},
+      </if>
+      <if test="userid != null" >
+        #{userid}
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="update" parameterType="mall.base.model.Syslog" >
+    update syslog
+    <set >
+      <if test="syslogcontent != null" >
+        sysLogContent = #{syslogcontent},
+      </if>
+      <if test="syslogtime != null" >
+        sysLogTime = #{syslogtime},
+      </if>
+      <if test="userid != null" >
+        userId = #{userid}
+      </if>
+    </set>
+    where
+    sysLogId = #{syslogid}
+  </update>
+  
+  <delete id="batchDelete" >
+    delete from syslog
+    where sysLogId in(
+    <foreach item="item" collection="list" separator="," >
+      #{item}
+    </foreach>
+    )
+  </delete>
+  
+  <select id="getListWithPage" resultType="mall.base.model.Syslog" parameterType="mall.base.model.Syslog" >
+    select * from syslog
+    where 1=1
+    <if test="syslogid != null" >
+      and sysLogId = #{syslogid}
+    </if>
+    <if test="syslogcontent != null" >
+      and sysLogContent = #{syslogcontent}
+    </if>
+    <if test="syslogtime != null" >
+      and sysLogTime = #{syslogtime}
+    </if>
+    <if test="userid != null" >
+      and userId = #{userid}
+    </if>
+  </select>
+  
+  <select id="count" resultType="java.lang.Long" parameterType="mall.base.model.Syslog" >
+    select count(*) from syslog
+    where 1=1
+    <if test="syslogid != null" >
+      and sysLogId = #{syslogid}
+    </if>
+    <if test="syslogcontent != null" >
+      and sysLogContent = #{syslogcontent}
+    </if>
+    <if test="syslogtime != null" >
+      and sysLogTime = #{syslogtime}
+    </if>
+    <if test="userid != null" >
+      and userId = #{userid}
+    </if>
+  </select>
+  
+</mapper>

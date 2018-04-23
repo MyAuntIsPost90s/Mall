@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mall.base.dao.AddresslistMapper" >
+  <select id="getList" resultType="mall.base.model.Addresslist" parameterType="mall.base.model.Addresslist" >
+    select * from addresslist
+    where 1=1
+    <if test="addresslistid != null" >
+      and addressListId = #{addresslistid}
+    </if>
+    <if test="addresslistname != null" >
+      and addressListName = #{addresslistname}
+    </if>
+    <if test="addresslistphone != null" >
+      and addressListPhone = #{addresslistphone}
+    </if>
+    <if test="addresslisttime != null" >
+      and addressListTime = #{addresslisttime}
+    </if>
+  </select>
+  
+  <select id="getSingle" resultType="mall.base.model.Addresslist" >
+    select * from addresslist
+    where addressListId = #{id}
+    limit 0,1
+  </select>
+  
+  <insert id="insert" parameterType="mall.base.model.Addresslist" >
+    insert into addresslist
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="addresslistid != null" >
+        addressListId,
+      </if>
+      <if test="addresslistname != null" >
+        addressListName,
+      </if>
+      <if test="addresslistphone != null" >
+        addressListPhone,
+      </if>
+      <if test="addresslisttime != null" >
+        addressListTime
+      </if>
+    </trim>
+    <trim prefix="values(" suffix=")" suffixOverrides="," >
+      <if test="addresslistid != null" >
+        #{addresslistid},
+      </if>
+      <if test="addresslistname != null" >
+        #{addresslistname},
+      </if>
+      <if test="addresslistphone != null" >
+        #{addresslistphone},
+      </if>
+      <if test="addresslisttime != null" >
+        #{addresslisttime}
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="update" parameterType="mall.base.model.Addresslist" >
+    update addresslist
+    <set >
+      <if test="addresslistname != null" >
+        addressListName = #{addresslistname},
+      </if>
+      <if test="addresslistphone != null" >
+        addressListPhone = #{addresslistphone},
+      </if>
+      <if test="addresslisttime != null" >
+        addressListTime = #{addresslisttime}
+      </if>
+    </set>
+    where
+    addressListId = #{addresslistid}
+  </update>
+  
+  <delete id="batchDelete" >
+    delete from addresslist
+    where addressListId in(
+    <foreach item="item" collection="list" separator="," >
+      #{item}
+    </foreach>
+    )
+  </delete>
+  
+  <select id="getListWithPage" resultType="mall.base.model.Addresslist" parameterType="mall.base.model.Addresslist" >
+    select * from addresslist
+    where 1=1
+    <if test="addresslistid != null" >
+      and addressListId = #{addresslistid}
+    </if>
+    <if test="addresslistname != null" >
+      and (addressListName like CONCAT('%',#{addresslistname},'%')
+      or addressListPhone like CONCAT('%',#{addresslistname},'%'))
+    </if>
+    <if test="addresslistphone != null" >
+      and addressListPhone = #{addresslistphone}
+    </if>
+    <if test="addresslisttime != null" >
+      and addressListTime = #{addresslisttime}
+    </if>
+  </select>
+  
+  <select id="count" resultType="java.lang.Long" parameterType="mall.base.model.Addresslist" >
+    select count(*) from addresslist
+    where 1=1
+    <if test="addresslistid != null" >
+      and addressListId = #{addresslistid}
+    </if>
+    <if test="addresslistname != null" >
+      and addressListName = #{addresslistname}
+    </if>
+    <if test="addresslistphone != null" >
+      and addressListPhone = #{addresslistphone}
+    </if>
+    <if test="addresslisttime != null" >
+      and addressListTime = #{addresslisttime}
+    </if>
+  </select>
+  
+</mapper>

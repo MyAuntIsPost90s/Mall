@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mall.base.dao.UserinfoMapper" >
+  <select id="getList" resultType="mall.base.model.Userinfo" parameterType="mall.base.model.Userinfo" >
+    select * from userinfo
+    where 1=1
+    <if test="userid != null" >
+      and userId = #{userid}
+    </if>
+    <if test="username != null" >
+      and userName = #{username}
+    </if>
+    <if test="password != null" >
+      and password = #{password}
+    </if>
+    <if test="realname != null" >
+      and realName = #{realname}
+    </if>
+    <if test="createtime != null" >
+      and createTime = #{createtime}
+    </if>
+    <if test="wages != null" >
+      and wages = #{wages}
+    </if>
+    <if test="usertype != null" >
+      and userType = #{usertype}
+    </if>
+    <if test="userheadimgurl != null" >
+      and userHeadImgUrl = #{userheadimgurl}
+    </if>
+  </select>
+  
+  <select id="getSingle" resultType="mall.base.model.Userinfo" >
+    select * from userinfo
+    where userId = #{id}
+    limit 0,1
+  </select>
+  
+  <insert id="insert" parameterType="mall.base.model.Userinfo" >
+    insert into userinfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userid != null" >
+        userId,
+      </if>
+      <if test="username != null" >
+        userName,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="realname != null" >
+        realName,
+      </if>
+      <if test="createtime != null" >
+        createTime,
+      </if>
+      <if test="wages != null" >
+        wages,
+      </if>
+      <if test="usertype != null" >
+        userType,
+      </if>
+      <if test="userheadimgurl != null" >
+        userHeadImgUrl
+      </if>
+    </trim>
+    <trim prefix="values(" suffix=")" suffixOverrides="," >
+      <if test="userid != null" >
+        #{userid},
+      </if>
+      <if test="username != null" >
+        #{username},
+      </if>
+      <if test="password != null" >
+        #{password},
+      </if>
+      <if test="realname != null" >
+        #{realname},
+      </if>
+      <if test="createtime != null" >
+        #{createtime},
+      </if>
+      <if test="wages != null" >
+        #{wages},
+      </if>
+      <if test="usertype != null" >
+        #{usertype},
+      </if>
+      <if test="userheadimgurl != null" >
+        #{userheadimgurl}
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="update" parameterType="mall.base.model.Userinfo" >
+    update userinfo
+    <set >
+      <if test="username != null" >
+        userName = #{username},
+      </if>
+      <if test="password != null" >
+        password = #{password},
+      </if>
+      <if test="realname != null" >
+        realName = #{realname},
+      </if>
+      <if test="createtime != null" >
+        createTime = #{createtime},
+      </if>
+      <if test="wages != null" >
+        wages = #{wages},
+      </if>
+      <if test="usertype != null" >
+        userType = #{usertype},
+      </if>
+      <if test="userheadimgurl != null" >
+        userHeadImgUrl = #{userheadimgurl}
+      </if>
+    </set>
+    where
+    userId = #{userid}
+  </update>
+  
+  <delete id="batchDelete" >
+    delete from userinfo
+    where userId in(
+    <foreach item="item" collection="list" separator="," >
+      #{item}
+    </foreach>
+    )
+  </delete>
+  
+  <select id="getListWithPage" resultType="mall.base.model.Userinfo" parameterType="mall.base.model.Userinfo" >
+    select * from userinfo
+    where 1=1
+    <if test="userid != null" >
+      and userId = #{userid}
+    </if>
+    <if test="username != null" >
+      and userName = #{username}
+    </if>
+    <if test="password != null" >
+      and password = #{password}
+    </if>
+    <if test="realname != null" >
+      and realName = #{realname}
+    </if>
+    <if test="createtime != null" >
+      and createTime = #{createtime}
+    </if>
+    <if test="wages != null" >
+      and wages = #{wages}
+    </if>
+    <if test="usertype != null" >
+      and userType = #{usertype}
+    </if>
+    <if test="userheadimgurl != null" >
+      and userHeadImgUrl = #{userheadimgurl}
+    </if>
+  </select>
+  
+  <select id="count" resultType="java.lang.Long" parameterType="mall.base.model.Userinfo" >
+    select count(*) from userinfo
+    where 1=1
+    <if test="userid != null" >
+      and userId = #{userid}
+    </if>
+    <if test="username != null" >
+      and userName = #{username}
+    </if>
+    <if test="password != null" >
+      and password = #{password}
+    </if>
+    <if test="realname != null" >
+      and realName = #{realname}
+    </if>
+    <if test="createtime != null" >
+      and createTime = #{createtime}
+    </if>
+    <if test="wages != null" >
+      and wages = #{wages}
+    </if>
+    <if test="usertype != null" >
+      and userType = #{usertype}
+    </if>
+    <if test="userheadimgurl != null" >
+      and userHeadImgUrl = #{userheadimgurl}
+    </if>
+  </select>
+  
+   <select id="getStaffWithPage" resultType="mall.base.model.Userinfo" parameterType="mall.base.model.Userinfo" >
+    select * from userinfo
+    where (userType = 1 or userType=2)
+    <if test="userid != null" >
+      and userId = #{userid}
+    </if>
+    <if test="username != null" >
+      and userName = #{username}
+    </if>
+    <if test="password != null" >
+      and password = #{password}
+    </if>
+    <if test="realname != null" >
+      and realName = #{realname}
+    </if>
+    <if test="createtime != null" >
+      and createTime = #{createtime}
+    </if>
+    <if test="wages != null" >
+      and wages = #{wages}
+    </if>
+    <if test="userheadimgurl != null" >
+      and userHeadImgUrl = #{userheadimgurl}
+    </if>
+  </select>
+  
+  <select id="getStaffWages" resultType="java.lang.Integer">
+  	SELECT SUM(wages) FROM userinfo
+	WHERE userType = 1 OR userType=2
+  </select>
+</mapper>

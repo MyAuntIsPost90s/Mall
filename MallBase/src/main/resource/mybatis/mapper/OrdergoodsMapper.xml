@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mall.base.dao.OrdergoodsMapper" >
+  <select id="getList" resultType="mall.base.model.Ordergoods" parameterType="mall.base.model.Ordergoods" >
+    select * from ordergoods
+    where 1=1
+    <if test="ordergoodsid != null" >
+      and orderGoodsId = #{ordergoodsid}
+    </if>
+    <if test="goodsid != null" >
+      and goodsId = #{goodsid}
+    </if>
+    <if test="ordergoodsname != null" >
+      and orderGoodsName = #{ordergoodsname}
+    </if>
+    <if test="ordergoodscost != null" >
+      and orderGoodsCost = #{ordergoodscost}
+    </if>
+    <if test="ordergoodsprice != null" >
+      and orderGoodsPrice = #{ordergoodsprice}
+    </if>
+    <if test="ordergoodscount != null" >
+      and orderGoodsCount = #{ordergoodscount}
+    </if>
+    <if test="ordergoodspercentage != null" >
+      and orderGoodsPercentage = #{ordergoodspercentage}
+    </if>
+    <if test="orderid != null" >
+      and orderId = #{orderid}
+    </if>
+    <if test="ordergoodsimgurl != null" >
+      and orderGoodsImgUrl = #{ordergoodsimgurl}
+    </if>
+  </select>
+  
+  <select id="getSingle" resultType="mall.base.model.Ordergoods" >
+    select * from ordergoods
+    where orderGoodsId = #{id}
+    limit 0,1
+  </select>
+  
+  <insert id="insert" parameterType="mall.base.model.Ordergoods" >
+    insert into ordergoods
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="ordergoodsid != null" >
+        orderGoodsId,
+      </if>
+      <if test="goodsid != null" >
+        goodsId,
+      </if>
+      <if test="ordergoodsname != null" >
+        orderGoodsName,
+      </if>
+      <if test="ordergoodscost != null" >
+        orderGoodsCost,
+      </if>
+      <if test="ordergoodsprice != null" >
+        orderGoodsPrice,
+      </if>
+      <if test="ordergoodscount != null" >
+        orderGoodsCount,
+      </if>
+      <if test="ordergoodspercentage != null" >
+        orderGoodsPercentage,
+      </if>
+      <if test="orderid != null" >
+        orderId,
+      </if>
+      <if test="ordergoodsimgurl != null" >
+        orderGoodsImgUrl
+      </if>
+    </trim>
+    <trim prefix="values(" suffix=")" suffixOverrides="," >
+      <if test="ordergoodsid != null" >
+        #{ordergoodsid},
+      </if>
+      <if test="goodsid != null" >
+        #{goodsid},
+      </if>
+      <if test="ordergoodsname != null" >
+        #{ordergoodsname},
+      </if>
+      <if test="ordergoodscost != null" >
+        #{ordergoodscost},
+      </if>
+      <if test="ordergoodsprice != null" >
+        #{ordergoodsprice},
+      </if>
+      <if test="ordergoodscount != null" >
+        #{ordergoodscount},
+      </if>
+      <if test="ordergoodspercentage != null" >
+        #{ordergoodspercentage},
+      </if>
+      <if test="orderid != null" >
+        #{orderid},
+      </if>
+      <if test="ordergoodsimgurl != null" >
+        #{ordergoodsimgurl}
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="update" parameterType="mall.base.model.Ordergoods" >
+    update ordergoods
+    <set >
+      <if test="goodsid != null" >
+        goodsId = #{goodsid},
+      </if>
+      <if test="ordergoodsname != null" >
+        orderGoodsName = #{ordergoodsname},
+      </if>
+      <if test="ordergoodscost != null" >
+        orderGoodsCost = #{ordergoodscost},
+      </if>
+      <if test="ordergoodsprice != null" >
+        orderGoodsPrice = #{ordergoodsprice},
+      </if>
+      <if test="ordergoodscount != null" >
+        orderGoodsCount = #{ordergoodscount},
+      </if>
+      <if test="ordergoodspercentage != null" >
+        orderGoodsPercentage = #{ordergoodspercentage},
+      </if>
+      <if test="orderid != null" >
+        orderId = #{orderid},
+      </if>
+      <if test="ordergoodsimgurl != null" >
+        orderGoodsImgUrl = #{ordergoodsimgurl}
+      </if>
+    </set>
+    where
+    orderGoodsId = #{ordergoodsid}
+  </update>
+  
+  <delete id="batchDelete" >
+    delete from ordergoods
+    where orderGoodsId in(
+    <foreach item="item" collection="list" separator="," >
+      #{item}
+    </foreach>
+    )
+  </delete>
+  
+  <select id="getListWithPage" resultType="mall.base.model.Ordergoods" parameterType="mall.base.model.Ordergoods" >
+    select * from ordergoods
+    where 1=1
+    <if test="ordergoodsid != null" >
+      and orderGoodsId = #{ordergoodsid}
+    </if>
+    <if test="goodsid != null" >
+      and goodsId = #{goodsid}
+    </if>
+    <if test="ordergoodsname != null" >
+      and orderGoodsName = #{ordergoodsname}
+    </if>
+    <if test="ordergoodscost != null" >
+      and orderGoodsCost = #{ordergoodscost}
+    </if>
+    <if test="ordergoodsprice != null" >
+      and orderGoodsPrice = #{ordergoodsprice}
+    </if>
+    <if test="ordergoodscount != null" >
+      and orderGoodsCount = #{ordergoodscount}
+    </if>
+    <if test="ordergoodspercentage != null" >
+      and orderGoodsPercentage = #{ordergoodspercentage}
+    </if>
+    <if test="orderid != null" >
+      and orderId = #{orderid}
+    </if>
+    <if test="ordergoodsimgurl != null" >
+      and orderGoodsImgUrl = #{ordergoodsimgurl}
+    </if>
+  </select>
+  
+  <select id="count" resultType="java.lang.Long" parameterType="mall.base.model.Ordergoods" >
+    select count(*) from ordergoods
+    where 1=1
+    <if test="ordergoodsid != null" >
+      and orderGoodsId = #{ordergoodsid}
+    </if>
+    <if test="goodsid != null" >
+      and goodsId = #{goodsid}
+    </if>
+    <if test="ordergoodsname != null" >
+      and orderGoodsName = #{ordergoodsname}
+    </if>
+    <if test="ordergoodscost != null" >
+      and orderGoodsCost = #{ordergoodscost}
+    </if>
+    <if test="ordergoodsprice != null" >
+      and orderGoodsPrice = #{ordergoodsprice}
+    </if>
+    <if test="ordergoodscount != null" >
+      and orderGoodsCount = #{ordergoodscount}
+    </if>
+    <if test="ordergoodspercentage != null" >
+      and orderGoodsPercentage = #{ordergoodspercentage}
+    </if>
+    <if test="orderid != null" >
+      and orderId = #{orderid}
+    </if>
+    <if test="ordergoodsimgurl != null" >
+      and orderGoodsImgUrl = #{ordergoodsimgurl}
+    </if>
+  </select>
+  
+   <select id="getItemSum" resultType="mall.base.model.Ordergoods">
+  	SELECT 
+		SUM(orderGoodsPrice * orderGoodsCount) orderGoodsPrice
+		, SUM(orderGoodsCount) orderGoodsCount
+		, SUM(orderGoodsCost * orderGoodsCount) orderGoodsCost
+		, SUM(CASE WHEN o.orderType = 1  THEN orderGoodsPercentage * orderGoodsCount ELSE 0 END ) orderGoodsPercentage 
+	FROM ordergoods og
+	LEFT JOIN orderform o ON og.orderid=o.orderid
+	WHERE 1=1 
+	<if test="orderType != null" >
+	and o.ordertype = #{orderType}
+	</if>
+	<if test="userid != null" >
+	and o.userid=#{userid}
+	</if>
+	<if test="type == 'd'.toString() and ordertime != null">
+		and DATE_FORMAT(ordertime, '%Y-%m-%d')=DATE_FORMAT(#{ordertime},'%Y-%m-%d')
+	</if>
+	<if test="type == 'm'.toString() and ordertime != null">
+		and DATE_FORMAT(ordertime, '%Y-%m')=DATE_FORMAT(#{ordertime},'%Y-%m')
+	</if>
+	<if test="type == 'y'.toString() and ordertime != null">
+		and DATE_FORMAT(ordertime, '%Y')=DATE_FORMAT(#{ordertime},'%Y')
+	</if>
+  </select>
+  
+</mapper>

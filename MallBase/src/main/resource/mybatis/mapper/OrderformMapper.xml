@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mall.base.dao.OrderformMapper" >
+  <select id="getList" resultType="mall.base.model.Orderform" parameterType="mall.base.model.Orderform" >
+    select * from orderform
+    where 1=1
+    <if test="orderid != null" >
+      and orderId = #{orderid}
+    </if>
+    <if test="ordertime != null" >
+      and orderTime = #{ordertime}
+    </if>
+    <if test="orderprice != null" >
+      and orderPrice = #{orderprice}
+    </if>
+    <if test="userid != null" >
+      and userId = #{userid}
+    </if>
+    <if test="ordertype != null" >
+      and orderType = #{ordertype}
+    </if>
+    <if test="orderstatus != null" >
+      and orderStatus = #{orderstatus}
+    </if>
+    <if test="orderdesc != null" >
+      and orderDesc = #{orderdesc}
+    </if>
+  </select>
+  
+  <select id="getSingle" resultType="mall.base.model.Orderform" >
+    select * from orderform
+    where orderId = #{id}
+    limit 0,1
+  </select>
+  
+  <insert id="insert" parameterType="mall.base.model.Orderform" >
+    insert into orderform
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="orderid != null" >
+        orderId,
+      </if>
+      <if test="ordertime != null" >
+        orderTime,
+      </if>
+      <if test="orderprice != null" >
+        orderPrice,
+      </if>
+      <if test="userid != null" >
+        userId,
+      </if>
+      <if test="ordertype != null" >
+        orderType,
+      </if>
+      <if test="orderstatus != null" >
+        orderStatus,
+      </if>
+      <if test="orderdesc != null" >
+        orderDesc
+      </if>
+    </trim>
+    <trim prefix="values(" suffix=")" suffixOverrides="," >
+      <if test="orderid != null" >
+        #{orderid},
+      </if>
+      <if test="ordertime != null" >
+        #{ordertime},
+      </if>
+      <if test="orderprice != null" >
+        #{orderprice},
+      </if>
+      <if test="userid != null" >
+        #{userid},
+      </if>
+      <if test="ordertype != null" >
+        #{ordertype},
+      </if>
+      <if test="orderstatus != null" >
+        #{orderstatus},
+      </if>
+      <if test="orderdesc != null" >
+        #{orderdesc}
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="update" parameterType="mall.base.model.Orderform" >
+    update orderform
+    <set >
+      <if test="ordertime != null" >
+        orderTime = #{ordertime},
+      </if>
+      <if test="orderprice != null" >
+        orderPrice = #{orderprice},
+      </if>
+      <if test="userid != null" >
+        userId = #{userid},
+      </if>
+      <if test="ordertype != null" >
+        orderType = #{ordertype},
+      </if>
+      <if test="orderstatus != null" >
+        orderStatus = #{orderstatus},
+      </if>
+      <if test="orderdesc != null" >
+        orderDesc = #{orderdesc}
+      </if>
+    </set>
+    where
+    orderId = #{orderid}
+  </update>
+  
+  <delete id="batchDelete" >
+    delete from orderform
+    where orderId in(
+    <foreach item="item" collection="list" separator="," >
+      #{item}
+    </foreach>
+    )
+  </delete>
+  
+  <select id="getListWithPage" resultType="mall.base.model.Orderform" parameterType="mall.base.model.Orderform" >
+    select * from orderform
+    where 1=1
+    <if test="orderid != null" >
+      and orderId = #{orderid}
+    </if>
+    <if test="ordertime != null" >
+      and orderTime = #{ordertime}
+    </if>
+    <if test="orderprice != null" >
+      and orderPrice = #{orderprice}
+    </if>
+    <if test="userid != null" >
+      and userId = #{userid}
+    </if>
+    <if test="ordertype != null" >
+      and orderType = #{ordertype}
+    </if>
+    <if test="orderstatus != null" >
+      and orderStatus = #{orderstatus}
+    </if>
+    <if test="orderdesc != null" >
+      and orderDesc = #{orderdesc}
+    </if>
+  </select>
+  
+  <select id="count" resultType="java.lang.Long" parameterType="mall.base.model.Orderform" >
+    select count(*) from orderform
+    where 1=1
+    <if test="orderid != null" >
+      and orderId = #{orderid}
+    </if>
+    <if test="ordertime != null" >
+      and orderTime = #{ordertime}
+    </if>
+    <if test="orderprice != null" >
+      and orderPrice = #{orderprice}
+    </if>
+    <if test="userid != null" >
+      and userId = #{userid}
+    </if>
+    <if test="ordertype != null" >
+      and orderType = #{ordertype}
+    </if>
+    <if test="orderstatus != null" >
+      and orderStatus = #{orderstatus}
+    </if>
+    <if test="orderdesc != null" >
+      and orderDesc = #{orderdesc}
+    </if>
+  </select>
+  
+</mapper>

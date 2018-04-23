@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mall.base.dao.FeedbackMapper" >
+  <resultMap type="mall.base.model.dto.FeedbackUserDto" id="FeedbackUserMap" autoMapping="true">
+  	<id column="feedbackid" property="feedbackid" />
+  	<association property="userinfo" javaType="mall.base.model.Userinfo" autoMapping="true"></association>
+  </resultMap>
+
+  <select id="getList" resultType="mall.base.model.Feedback" parameterType="mall.base.model.Feedback" >
+    select * from feedback
+    where 1=1
+    <if test="feedbackid != null" >
+      and feedbackId = #{feedbackid}
+    </if>
+    <if test="feedbackcontent != null" >
+      and feedbackContent = #{feedbackcontent}
+    </if>
+    <if test="feedbacktime != null" >
+      and feedbackTime = #{feedbacktime}
+    </if>
+    <if test="userid != null" >
+      and userId = #{userid}
+    </if>
+  </select>
+  
+  <select id="getSingle" resultType="mall.base.model.Feedback" >
+    select * from feedback
+    where feedbackId = #{id}
+    limit 0,1
+  </select>
+  
+  <insert id="insert" parameterType="mall.base.model.Feedback" >
+    insert into feedback
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="feedbackid != null" >
+        feedbackId,
+      </if>
+      <if test="feedbackcontent != null" >
+        feedbackContent,
+      </if>
+      <if test="feedbacktime != null" >
+        feedbackTime,
+      </if>
+      <if test="userid != null" >
+        userId
+      </if>
+    </trim>
+    <trim prefix="values(" suffix=")" suffixOverrides="," >
+      <if test="feedbackid != null" >
+        #{feedbackid},
+      </if>
+      <if test="feedbackcontent != null" >
+        #{feedbackcontent},
+      </if>
+      <if test="feedbacktime != null" >
+        #{feedbacktime},
+      </if>
+      <if test="userid != null" >
+        #{userid}
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="update" parameterType="mall.base.model.Feedback" >
+    update feedback
+    <set >
+      <if test="feedbackcontent != null" >
+        feedbackContent = #{feedbackcontent},
+      </if>
+      <if test="feedbacktime != null" >
+        feedbackTime = #{feedbacktime},
+      </if>
+      <if test="userid != null" >
+        userId = #{userid}
+      </if>
+    </set>
+    where
+    feedbackId = #{feedbackid}
+  </update>
+  
+  <delete id="batchDelete" >
+    delete from feedback
+    where feedbackId in(
+    <foreach item="item" collection="list" separator="," >
+      #{item}
+    </foreach>
+    )
+  </delete>
+  
+  <select id="getListWithPage" resultType="mall.base.model.Feedback" parameterType="mall.base.model.Feedback" >
+    select * from feedback
+    where 1=1
+    <if test="feedbackid != null" >
+      and feedbackId = #{feedbackid}
+    </if>
+    <if test="feedbackcontent != null" >
+      and feedbackContent = #{feedbackcontent}
+    </if>
+    <if test="feedbacktime != null" >
+      and feedbackTime = #{feedbacktime}
+    </if>
+    <if test="userid != null" >
+      and userId = #{userid}
+    </if>
+  </select>
+  
+  <select id="count" resultType="java.lang.Long" parameterType="mall.base.model.Feedback" >
+    select count(*) from feedback
+    where 1=1
+    <if test="feedbackid != null" >
+      and feedbackId = #{feedbackid}
+    </if>
+    <if test="feedbackcontent != null" >
+      and feedbackContent = #{feedbackcontent}
+    </if>
+    <if test="feedbacktime != null" >
+      and feedbackTime = #{feedbacktime}
+    </if>
+    <if test="userid != null" >
+      and userId = #{userid}
+    </if>
+  </select>
+  
+  <select id="getFeedbackUserWithPage" resultMap="FeedbackUserMap" parameterType="mall.base.model.Feedback" >
+    select f.*
+    ,u.username,u.realname,u.userheadimgurl 
+    from feedback f
+    left join userinfo u on f.userid=u.userid
+    where 1=1
+    <if test="feedbackid != null" >
+      and f.feedbackId = #{feedbackid}
+    </if>
+    <if test="feedbackcontent != null" >
+      and f.feedbackContent = #{feedbackcontent}
+    </if>
+    <if test="feedbacktime != null" >
+      and f.feedbackTime = #{feedbacktime}
+    </if>
+    <if test="userid != null" >
+      and f.userId = #{userid}
+    </if>
+  </select>
+  
+</mapper>

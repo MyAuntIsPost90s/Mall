@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mall.base.dao.GoodsimgMapper" >
+  <select id="getList" resultType="mall.base.model.Goodsimg" parameterType="mall.base.model.Goodsimg" >
+    select * from goodsimg
+    where 1=1
+    <if test="goodsimgid != null" >
+      and goodsImgId = #{goodsimgid}
+    </if>
+    <if test="goodsimgurl != null" >
+      and goodsImgUrl = #{goodsimgurl}
+    </if>
+    <if test="goodsid != null" >
+      and goodsId = #{goodsid}
+    </if>
+  </select>
+  
+  <select id="getSingle" resultType="mall.base.model.Goodsimg" >
+    select * from goodsimg
+    where goodsImgId = #{id}
+    limit 0,1
+  </select>
+  
+  <insert id="insert" parameterType="mall.base.model.Goodsimg" >
+    insert into goodsimg
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="goodsimgid != null" >
+        goodsImgId,
+      </if>
+      <if test="goodsimgurl != null" >
+        goodsImgUrl,
+      </if>
+      <if test="goodsid != null" >
+        goodsId
+      </if>
+    </trim>
+    <trim prefix="values(" suffix=")" suffixOverrides="," >
+      <if test="goodsimgid != null" >
+        #{goodsimgid},
+      </if>
+      <if test="goodsimgurl != null" >
+        #{goodsimgurl},
+      </if>
+      <if test="goodsid != null" >
+        #{goodsid}
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="update" parameterType="mall.base.model.Goodsimg" >
+    update goodsimg
+    <set >
+      <if test="goodsimgurl != null" >
+        goodsImgUrl = #{goodsimgurl},
+      </if>
+      <if test="goodsid != null" >
+        goodsId = #{goodsid}
+      </if>
+    </set>
+    where
+    goodsImgId = #{goodsimgid}
+  </update>
+  
+  <delete id="batchDelete" >
+    delete from goodsimg
+    where goodsImgId in(
+    <foreach item="item" collection="list" separator="," >
+      #{item}
+    </foreach>
+    )
+  </delete>
+  
+  <select id="getListWithPage" resultType="mall.base.model.Goodsimg" parameterType="mall.base.model.Goodsimg" >
+    select * from goodsimg
+    where 1=1
+    <if test="goodsimgid != null" >
+      and goodsImgId = #{goodsimgid}
+    </if>
+    <if test="goodsimgurl != null" >
+      and goodsImgUrl = #{goodsimgurl}
+    </if>
+    <if test="goodsid != null" >
+      and goodsId = #{goodsid}
+    </if>
+  </select>
+  
+  <select id="count" resultType="java.lang.Long" parameterType="mall.base.model.Goodsimg" >
+    select count(*) from goodsimg
+    where 1=1
+    <if test="goodsimgid != null" >
+      and goodsImgId = #{goodsimgid}
+    </if>
+    <if test="goodsimgurl != null" >
+      and goodsImgUrl = #{goodsimgurl}
+    </if>
+    <if test="goodsid != null" >
+      and goodsId = #{goodsid}
+    </if>
+  </select>
+  
+  <delete id="deleteByGoodsId" >
+    delete from goodsimg
+    where goodsid=#{goodsid}
+  </delete>
+  
+  <insert id="batchInsert">
+   insert into goodsimg
+   (goodsimgid, goodsimgurl, goodsid)
+   values
+   <foreach collection="list" item="item" separator="," >
+   	(#{item.goodsimgid},#{item.goodsimgurl},#{item.goodsid})
+   </foreach>
+  </insert>
+</mapper>
