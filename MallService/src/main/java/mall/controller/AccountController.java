@@ -68,4 +68,17 @@ public class AccountController {
 			requestHolder.err(e);
 		}
 	}
+	
+	/**
+	 * 登出
+	 * 
+	 * @param request
+	 * @param response
+	 */
+	@ResponseBody
+	@RequestMapping("loginOut")
+	public void loginOut(HttpServletRequest request, HttpServletResponse response){
+		RequestHolder requestHolder = RequestHolder.get(request, response);
+		requestHolder.removeClientUser();
+	}
 }

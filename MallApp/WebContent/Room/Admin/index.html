@@ -16,7 +16,7 @@
     <div class="layui-col-xs3 logo">Sales Online</div>
     <div class="layui-col-xs3 layui-col-xs-offset6 opt">
         <a onclick="loadWellcom()" style="cursor: pointer;">首页</a> |
-        <a style="cursor: pointer;" href="../login.html">退出</a>
+        <a onclick="loginOut()" style="cursor: pointer;" href="../login.html">退出</a>
     </div>
 </div>
 <div class="container">
@@ -38,6 +38,9 @@
                 <!--</dl>-->
                 <dl class="layui-nav-child">
                     <dd><a data-id="UserInfo/buyman_list.html">采购员管理</a></dd>
+                </dl>
+                <dl class="layui-nav-child">
+                    <dd><a data-id="UserInfo/userman_list.html">会员管理</a></dd>
                 </dl>
                 <dl class="layui-nav-child">
                     <dd><a data-id="AddressList/list.html">通讯录管理</a></dd>
@@ -140,6 +143,11 @@
                 }
                 layer.msg(data.msg);
             },'json')
+    }
+
+    //登出
+    function loginOut(){
+        $.post(Config.UrlHead+'/account/loginOut');
     }
 </script>
 </body>

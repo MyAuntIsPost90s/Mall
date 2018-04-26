@@ -49,7 +49,7 @@ function MenuService() {
         '<ul class="user_info"><li class="li-realname">用户名sl1903</li>' +
         '<li class="li-username">普通会员</li></ul>' +
         '</div><div class="login_btnbox ">' +
-        '<a href="#" class="login_order ">我的订单</a>' +
+        '<a href="#" class="login_order ">我的订单</a><a href="login.html" id="login_out">退出</a>' +
         '</div><i class="icon_arrow_white"></i>' +
         '</div></div><div id="shopCart" class="item ">' +
         '<a href="shopcart.html"><span class="message "></span></a>' +
@@ -95,6 +95,10 @@ function MenuService() {
     function bindEvent() {
         $('#shopCart').click(function () {
             window.location.href = Config.MallAppUrlHead + '/shopcart.html';
+        })
+
+        $('#login_out').click(function () {
+            $.post(Config.UrlHead+'/account/loginOut');
         })
         jQuery(function ($) {
 
