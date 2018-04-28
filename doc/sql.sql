@@ -31,7 +31,7 @@ CREATE TABLE `address` (
 
 /*Data for the table `address` */
 
-insert  into `address`(`addressId`,`addressContent`,`addressName`,`addressPhone`,`userId`) values ('A11515215058021','香港九龙岛蓬莱仙岛7号','蔡蔡','17605036258','A17217312372710'),('A74219472688710','冒险岛12138号','小菜','74123654895','A17217312372710');
+insert  into `address`(`addressId`,`addressContent`,`addressName`,`addressPhone`,`userId`) values ('A11515215058021','香港九龙岛蓬莱仙岛7号','蔡蔡','17605036258','A17217312372710'),('A19709573808010','灵霄宝殿','玉皇大帝','12138','A67109533278610'),('A74219472688710','冒险岛12138号','小菜','74123654895','A17217312372710');
 
 /*Table structure for table `addresslist` */
 
@@ -144,14 +144,15 @@ CREATE TABLE `orderform` (
   `orderPrice` float NOT NULL DEFAULT '0' COMMENT '订单金额',
   `userId` varchar(32) NOT NULL COMMENT '售出人员编号',
   `orderType` int(11) NOT NULL DEFAULT '1' COMMENT '订单类型：1记录单 2用户单',
-  `orderStatus` int(11) NOT NULL DEFAULT '0' COMMENT '用户单状态：0未发货 1已发货 2退货',
+  `orderStatus` int(11) NOT NULL DEFAULT '0' COMMENT '用户单状态：0未发货 1已发货 2已完成',
   `orderDesc` varchar(200) NOT NULL DEFAULT '' COMMENT '订单备注',
+  `orderFlow` varchar(200) NOT NULL DEFAULT '暂无信息' COMMENT '订单流程',
   PRIMARY KEY (`orderId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `orderform` */
 
-insert  into `orderform`(`orderId`,`orderTime`,`orderPrice`,`userId`,`orderType`,`orderStatus`,`orderDesc`) values ('LG36916282149019','2018-04-23 16:28:21',5,'A17217312372710',2,0,'收件人：蔡蔡，联系方式：17605036258，收货地址：香港九龙岛蓬莱仙岛7号'),('LG52819324980211','2018-04-23 19:32:50',6,'A17217312372710',2,0,'收件人：小菜，联系方式：74123654895，收货地址：冒险岛12138号'),('LG54616271399610','2018-04-23 16:27:14',22,'A17217312372710',2,1,'收件人：蔡蔡，联系方式：17605036258，收货地址：香港九龙岛蓬莱仙岛7号'),('LG61914303108112','2018-03-28 14:30:31',80,'A96311013517616',1,1,'记录单'),('LG69414135298510','2018-04-08 14:13:53',80,'A96311013517616',2,1,'');
+insert  into `orderform`(`orderId`,`orderTime`,`orderPrice`,`userId`,`orderType`,`orderStatus`,`orderDesc`,`orderFlow`) values ('LG23110301753211','2018-04-28 10:30:18',0,'A47611123321712',1,1,'记录单','暂无信息'),('LG30210311274214','2018-04-28 10:31:13',60,'A47611123321712',1,1,'记录单','暂无信息'),('LG36916282149019','2018-04-23 16:28:21',5,'A17217312372710',2,0,'收件人：蔡蔡，联系方式：17605036258，收货地址：香港九龙岛蓬莱仙岛7号','暂无信息'),('LG52819324980211','2018-04-23 19:32:50',6,'A17217312372710',2,1,'收件人：小菜，联系方式：74123654895，收货地址：冒险岛12138号','1.订单已出库\n2.订单到达福州'),('LG54616271399610','2018-04-23 16:27:14',22,'A17217312372710',2,2,'收件人：蔡蔡，联系方式：17605036258，收货地址：香港九龙岛蓬莱仙岛7号','暂无信息'),('LG61914303108112','2018-03-28 14:30:31',80,'A96311013517616',1,1,'记录单','暂无信息');
 
 /*Table structure for table `ordergoods` */
 
@@ -172,7 +173,7 @@ CREATE TABLE `ordergoods` (
 
 /*Data for the table `ordergoods` */
 
-insert  into `ordergoods`(`orderGoodsId`,`goodsId`,`orderGoodsName`,`orderGoodsCost`,`orderGoodsPrice`,`orderGoodsCount`,`orderGoodsPercentage`,`orderId`,`orderGoodsImgUrl`) values ('LG19419324980313','LG26617020283211','鸭牌洗衣粉',4,6,1,1,'LG52819324980211','/Uploadfile/goodsfirstimg/LG32917075321916.png'),('LG32814135299311','LG54113260413514','真维斯被套',50,80,1,10,'LG69414135298510',''),('LG58216282149021','LG89317025760114','鸡牌洗衣粉',3,5,1,1,'LG36916282149019',''),('LG68514303108613','LG54113260413514','真维斯被套',50,80,1,10,'LG61914303108112',''),('LG77016271401914','LG26617020283211','鸭牌洗衣粉',4,6,2,1,'LG54616271399610',''),('LG87116271399712','LG89317025760114','鸡牌洗衣粉',3,5,2,1,'LG54616271399610','');
+insert  into `ordergoods`(`orderGoodsId`,`goodsId`,`orderGoodsName`,`orderGoodsCost`,`orderGoodsPrice`,`orderGoodsCount`,`orderGoodsPercentage`,`orderId`,`orderGoodsImgUrl`) values ('LG18810301754112','LG26617020283211','鸭牌洗衣粉',4,6,0,1,'LG23110301753211','/Uploadfile/goodsfirstimg/LG32917075321916.png'),('LG19419324980313','LG26617020283211','鸭牌洗衣粉',4,6,1,1,'LG52819324980211','/Uploadfile/goodsfirstimg/LG32917075321916.png'),('LG58216282149021','LG89317025760114','鸡牌洗衣粉',3,5,1,1,'LG36916282149019',''),('LG68514303108613','LG54113260413514','真维斯被套',50,80,1,10,'LG61914303108112',''),('LG77016271401914','LG26617020283211','鸭牌洗衣粉',4,6,2,1,'LG54616271399610',''),('LG87116271399712','LG89317025760114','鸡牌洗衣粉',3,5,2,1,'LG54616271399610',''),('LG96010311274815','LG26617020283211','鸭牌洗衣粉',4,6,10,1,'LG30210311274214','/Uploadfile/goodsfirstimg/LG32917075321916.png');
 
 /*Table structure for table `shopcart` */
 
@@ -220,7 +221,7 @@ CREATE TABLE `userinfo` (
 
 /*Data for the table `userinfo` */
 
-insert  into `userinfo`(`userId`,`userName`,`password`,`realName`,`createTime`,`wages`,`userType`,`userHeadImgUrl`) values ('A17217312372710','17605036258','202CB962AC59075B964B07152D234B70','蔡蔡','2018-04-08 17:31:24',0,3,'/Uploadfile/userheads/LG99114524150916.png'),('A47611123321712','zhoujielun','202CB962AC59075B964B07152D234B70','周杰伦','2014-01-01 00:00:00',3000,2,''),('A76511001709613','xiaoxiao','202CB962AC59075B964B07152D234B70','小小','2014-01-01 00:00:00',3000,1,''),('A84511110453511','lingjunjie','202CB962AC59075B964B07152D234B70','林俊杰','2014-01-01 00:00:00',3000,2,''),('A96311013517616','dada','202CB962AC59075B964B07152D234B70','大大','2014-01-01 00:00:00',3000,1,''),('R00001','root','C4CA4238A0B923820DCC509A6F75849B','我是超管','2014-01-01 00:00:00',0,-1,'');
+insert  into `userinfo`(`userId`,`userName`,`password`,`realName`,`createTime`,`wages`,`userType`,`userHeadImgUrl`) values ('A17217312372710','17605036258','202CB962AC59075B964B07152D234B70','蔡蔡','2018-04-08 17:31:24',0,3,'/Uploadfile/userheads/LG99114524150916.png'),('A47611123321712','zhoujielun','202CB962AC59075B964B07152D234B70','周杰伦','2014-01-01 00:00:00',3000,2,''),('A67109533278610','13075953205','202CB962AC59075B964B07152D234B70','13075953205','2018-04-28 09:53:33',0,3,''),('A76511001709613','xiaoxiao','202CB962AC59075B964B07152D234B70','小小','2014-01-01 00:00:00',3000,1,''),('A84511110453511','lingjunjie','202CB962AC59075B964B07152D234B70','林俊杰','2014-01-01 00:00:00',3000,2,''),('A96311013517616','dada','202CB962AC59075B964B07152D234B70','大大','2014-01-01 00:00:00',3000,1,''),('R00001','root','C4CA4238A0B923820DCC509A6F75849B','我是超管','2014-01-01 00:00:00',0,-1,'');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
