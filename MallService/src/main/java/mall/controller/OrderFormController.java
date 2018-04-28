@@ -54,6 +54,25 @@ public class OrderFormController {
 	}
 
 	/**
+	 * 获取单条信息记录
+	 * 
+	 * @param request
+	 * @param response
+	 * @param orderformid
+	 */
+	@ResponseBody
+	@RequestMapping("/single")
+	public void single(HttpServletRequest request, HttpServletResponse response, String orderformid) {
+		RequestHolder requestHolder = RequestHolder.get(request, response);
+		try {
+			Orderform orderform = orderFormService.single(orderformid);
+			requestHolder.success(orderform);
+		} catch (Exception e) {
+			requestHolder.err("操作失败", e);
+		}
+	}
+
+	/**
 	 * 获取订单列表（包含订单物品详情）
 	 * 
 	 * @param request

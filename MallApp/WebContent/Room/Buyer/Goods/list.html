@@ -21,7 +21,12 @@
         <ul id="tree-goodskind"></ul>
     </div>
     <div data-options='region:"center"'>
-        <table id="table-goods"></table>
+        <div id="tb-goods">
+            <label class="layui-form-label layui-inline" style="width: 50px;height: 30px;line-height: 30px;padding: 0">搜索：</label>
+            <input type="text" id="inp-condition" class="layui-input layui-input-inline" style="width: 150px;height: 30px" />
+            <button onclick="search()" class="layui-btn layui-btn-sm layui-btn-primary" type="button"><i class="layui-icon">&#xe615;</i> 搜索</button>
+        </div>
+        <table id="table-goods" data-options="toolbar:'#tb-goods'"></table>
     </div>
 </div>
 <script id="lay-goodsform" type="text/html">
@@ -55,6 +60,19 @@
             }
         })
     })
+
+    //搜索
+    function search(){
+        if(goodskindid=='-1'){
+            return;
+        }
+        var condition = $('#inp-condition').val();
+        if(condition==''){
+            $('#table-goods').datagrid('load',{});
+            return;
+        }
+        $('#table-goods').datagrid('load',{goodsname:condition,goodskindid:goodskindid});
+    }
 
     //批量删除
     function batchDelete() {
@@ -121,16 +139,18 @@
         var pager=$('#table-goods').datagrid('getPager');
         pager.pagination({
             showPageList: true,
-            buttons: [{
-                iconCls: 'icon-add',
-                handler: function () {
-                    if(goodskindid==''||goodskindid=='-1'){
-                        layer.msg('请先选择一个分类');
-                        return;
-                    }
-                    window.open('edit.html?type=add&goodskindid='+goodskindid);
-                }
-            }, {
+            buttons: [
+            //     {
+            //     iconCls: 'icon-add',
+            //     handler: function () {
+            //         if(goodskindid==''||goodskindid=='-1'){
+            //             layer.msg('请先选择一个分类');
+            //             return;
+            //         }
+            //         window.open('edit.html?type=add&goodskindid='+goodskindid);
+            //     }
+            // },
+                {
                 iconCls: 'icon-remove',
                 handler: function () {
                     batchDelete();

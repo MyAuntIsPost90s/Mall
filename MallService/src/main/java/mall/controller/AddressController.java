@@ -35,6 +35,8 @@ public class AddressController {
 	public void list(HttpServletRequest request, HttpServletResponse response, Address address, int page, int rows) {
 		RequestHolder requestHolder = RequestHolder.get(request, response);
 		try {
+			Userinfo userinfo = (Userinfo) requestHolder.getClientUser();
+			address.setUserid(userinfo.getUserid());
 			EUIPageList<Address> list = addressService.list(address, page, rows);
 			requestHolder.success(list);
 		} catch (Exception e) {
@@ -92,7 +94,7 @@ public class AddressController {
 	public void add(HttpServletRequest request, HttpServletResponse response, Address address) {
 		RequestHolder requestHolder = RequestHolder.get(request, response);
 		try {
-			Userinfo userinfo=(Userinfo)requestHolder.getClientUser();
+			Userinfo userinfo = (Userinfo) requestHolder.getClientUser();
 			address.setUserid(userinfo.getUserid());
 			addressService.add(address);
 			requestHolder.success("操作成功");

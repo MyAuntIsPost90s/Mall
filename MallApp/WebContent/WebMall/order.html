@@ -72,6 +72,7 @@
                         <li class="am-active"><a href="#tab-all">所有订单</a></li>
                         <li><a href="#tab-unsend">待发货</a></li>
                         <li><a href="#tab-unreceive">待收货</a></li>
+                        <li><a href="#tab-finished">已完成</a></li>
                     </ul>
                     <!-- 全部 -->
                     <div class="am-tabs-bd">
@@ -140,6 +141,38 @@
                         </div>
                         <!-- 待收货 -->
                         <div class="am-tab-panel am-fade" id="tab-unreceive">
+                            <div class="order-top">
+                                <div class="th th-item">
+                                    <td class="td-inner">商品</td>
+                                </div>
+                                <div class="th th-price">
+                                    <td class="td-inner">单价</td>
+                                </div>
+                                <div class="th th-number">
+                                    <td class="td-inner">数量</td>
+                                </div>
+                                <div class="th th-operation">
+                                    <td class="td-inner">商品操作</td>
+                                </div>
+                                <div class="th th-amount">
+                                    <td class="td-inner">合计</td>
+                                </div>
+                                <div class="th th-status">
+                                    <td class="td-inner">交易状态</td>
+                                </div>
+                                <div class="th th-change">
+                                    <td class="td-inner">交易操作</td>
+                                </div>
+                            </div>
+
+                            <div class="order-main">
+                                <div class="order-list">
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 已完成 -->
+                        <div class="am-tab-panel am-fade" id="tab-finished">
                             <div class="order-top">
                                 <div class="th th-item">
                                     <td class="td-inner">商品</td>
@@ -280,20 +313,36 @@
                     <li class="td td-status">
                         <div class="item-status">
                             <p class="Mystatus">交易成功</p>
-                            <p class="order-info"><a onclick="layer.msg('敬请期待')">查看物流</a></p>
+                            <p class="order-info"><a style="cursor: pointer" data-id="{{ item.orderid }}" class="btn-orderflow" >查看物流</a></p>
                         </div>
                     </li>
                     <li class="td td-change">
-                        {{ item.orderstatus==0?'未发货':(item.orderstatus==1?'已发货':'退货') }}
-                        <!--<div class="am-btn am-btn-danger anniu">-->
-                            <!--删除订单-->
-                        <!--</div>-->
+                        {{ item.orderstatus==0?'未发货':(item.orderstatus==1?'':'已完成') }}
+                        {{# if(item.orderstatus==1){ }}
+                        <div data-id="{{ item.orderid }}" class="am-btn am-btn-danger anniu btn-finished">
+                            确认收货
+                        </div>
+                        {{# } }}
                     </li>
                 </div>
             </div>
         </div>
     </div>
     {{# }); }}
+</script>
+<script id="lay-orderform" type="text/html">
+    <div style="padding: 10px;">
+        <form class="layui-form layui-form-pane" id="form-orderform">
+            <input id="opt-type" type="hidden" name="type" />
+            <input id="orderid" name="orderid" type="hidden" >
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">流程</label>
+                <div class="layui-input-block">
+                    <textarea id="ta-orderflow" readonly class="layui-textarea" style="width: 300px;height: 100px"></textarea>
+                </div>
+            </div>
+        </form>
+    </div>
 </script>
 <script src="Contents/js/mall.dao.js"></script>
 <script src="Contents/lib/layui/layui.all.js"></script>
@@ -328,6 +377,7 @@
                 var all=[];
                 var unsend=[];
                 var unrecieve=[];
+                var finished=[];
                 var list=data.data.rows;
                 for(var i=0;i<list.length;i++){
                     all.push(list[i]);
@@ -336,6 +386,9 @@
                     }
                     if(list[i].orderstatus==1){
                         unrecieve.push(list[i]);
+                    }
+                    if(list[i].orderstatus==2){
+                        finished.push(list[i]);
                     }
                 }
 
@@ -349,7 +402,49 @@
                 layui.laytpl(tempStr).render(unrecieve, function(html){
                     $('#tab-unreceive').find('.order-list').html(html);
                 });
+                layui.laytpl(tempStr).render(finished, function(html){
+                    $('#tab-finished').find('.order-list').html(html);
+                });
+                bindEvent();
             })
+        }
+
+        //绑定点击事件
+        function bindEvent(){
+            $('.btn-finished').unbind();
+            $('.btn-finished').click(function () {
+                var orderid=$(this).attr('data-id');
+                var orderFormDao=new OrderFormDao();
+                orderFormDao.update({orderid:orderid,orderstatus:2}
+                    ,function(data){
+                    layer.msg(data.msg);
+                    if(data.code==1){
+                        loadData();
+                    }
+                });
+            });
+            $('.btn-orderflow').unbind();
+            $('.btn-orderflow').click(function () {
+                var orderid=$(this).attr('data-id');
+                var orderFormDao=new OrderFormDao();
+                orderFormDao.single(orderid
+                    ,function(data){
+                        layer.open({
+                            type:1
+                            ,title:'物流详情'
+                            ,content:$('#lay-orderform').html()
+                            ,success:function(){
+                                data.data.type='edit';
+                                if(data.code==1){
+                                    $('#ta-orderflow').val(data.data.orderflow);
+                                    $('#orderid').val(data.data.orderid);
+                                }else {
+                                    layer.msg(data.msg);
+                                }
+                            }
+                        })
+                    });
+            });
         }
     }
 

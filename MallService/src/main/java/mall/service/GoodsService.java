@@ -34,7 +34,7 @@ public interface GoodsService {
 	 * @param rows
 	 * @return
 	 */
-	EUIPageList<GoodsDto> list4search(String goodsname,String goodskindid, int orderType, int page, int rows);
+	EUIPageList<GoodsDto> list4search(String goodsname, String goodskindid, int orderType, int page, int rows);
 
 	/**
 	 * 添加
@@ -50,6 +50,13 @@ public interface GoodsService {
 	 * @param userinfo
 	 */
 	void update(Goods goods, String urls);
+
+	/**
+	 * 修改数量（商品入库使用）
+	 * 
+	 * @param goods
+	 */
+	void update4count(Goods goods, String userid) throws Exception;
 
 	/**
 	 * 批量删除

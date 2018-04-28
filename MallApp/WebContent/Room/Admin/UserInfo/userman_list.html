@@ -17,7 +17,12 @@
 </head>
 <body>
 <div class="easyui-layout" data-options='fit:"true"'>
-    <table id="table-userinfo"></table>
+    <div id="tb-userinfo">
+        <label class="layui-form-label layui-inline" style="width: 50px;height: 30px;line-height: 30px;padding: 0">搜索：</label>
+        <input type="text" id="inp-condition" class="layui-input layui-input-inline" style="width: 150px;height: 30px" />
+        <button onclick="search()" class="layui-btn layui-btn-sm layui-btn-primary" type="button"><i class="layui-icon">&#xe615;</i> 搜索</button>
+    </div>
+    <table id="table-userinfo" data-options="toolbar:'#tb-userinfo'"></table>
 </div>
 <script id="lay-userinfoform" type="text/html">
     <div style="padding: 10px;">
@@ -62,6 +67,16 @@
     $(function () {
         initDataGrid();
     })
+
+    //搜索
+    function search(){
+        var condition = $('#inp-condition').val();
+        if(condition==''){
+            $('#table-userinfo').datagrid('load',{});
+            return;
+        }
+        $('#table-userinfo').datagrid('load',{realname:condition,usertype:3});
+    }
 
     //保存
     function save() {

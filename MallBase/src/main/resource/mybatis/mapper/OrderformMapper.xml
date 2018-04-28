@@ -25,6 +25,9 @@
     <if test="orderdesc != null" >
       and orderDesc = #{orderdesc}
     </if>
+    <if test="orderflow != null" >
+      and orderFlow = #{orderflow}
+    </if>
   </select>
   
   <select id="getSingle" resultType="mall.base.model.Orderform" >
@@ -55,7 +58,10 @@
         orderStatus,
       </if>
       <if test="orderdesc != null" >
-        orderDesc
+        orderDesc,
+      </if>
+      <if test="orderflow != null" >
+        orderFlow
       </if>
     </trim>
     <trim prefix="values(" suffix=")" suffixOverrides="," >
@@ -78,7 +84,10 @@
         #{orderstatus},
       </if>
       <if test="orderdesc != null" >
-        #{orderdesc}
+        #{orderdesc},
+      </if>
+      <if test="orderflow != null" >
+        #{orderflow}
       </if>
     </trim>
   </insert>
@@ -102,7 +111,10 @@
         orderStatus = #{orderstatus},
       </if>
       <if test="orderdesc != null" >
-        orderDesc = #{orderdesc}
+        orderDesc = #{orderdesc},
+      </if>
+      <if test="orderflow != null" >
+        orderFlow = #{orderflow}
       </if>
     </set>
     where
@@ -142,6 +154,9 @@
     <if test="orderdesc != null" >
       and orderDesc = #{orderdesc}
     </if>
+    <if test="orderflow != null" >
+      and orderFlow = #{orderflow}
+    </if>
   </select>
   
   <select id="count" resultType="java.lang.Long" parameterType="mall.base.model.Orderform" >
@@ -167,6 +182,9 @@
     </if>
     <if test="orderdesc != null" >
       and orderDesc = #{orderdesc}
+    </if>
+    <if test="orderflow != null" >
+      and orderFlow = #{orderflow}
     </if>
   </select>
   

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import lingshi.web.model.RequestHolder;
 import mall.base.model.Goods;
+import mall.base.model.Userinfo;
 import mall.base.model.dto.GoodsDto;
 import mall.service.GoodsService;
 import mall.uimodel.EUIPageList;
@@ -74,6 +75,26 @@ public class GoodsController {
 		RequestHolder requestHolder = RequestHolder.get(request, response);
 		try {
 			goodsService.update(goods, urls);
+			requestHolder.success("操作成功", goods);
+		} catch (Exception e) {
+			requestHolder.err("操作失败", e);
+		}
+	}
+
+	/**
+	 * 修改数量（入库）
+	 * 
+	 * @param request
+	 * @param response
+	 * @param userinfo
+	 */
+	@ResponseBody
+	@RequestMapping("/update4count")
+	public void update4count(HttpServletRequest request, HttpServletResponse response, Goods goods, String urls) {
+		RequestHolder requestHolder = RequestHolder.get(request, response);
+		try {
+			Userinfo userinfo = (Userinfo) requestHolder.getClientUser();
+			goodsService.update4count(goods, userinfo.getUserid());
 			requestHolder.success("操作成功", goods);
 		} catch (Exception e) {
 			requestHolder.err("操作失败", e);

@@ -153,9 +153,27 @@ function OrderFormDao(){
             }, 'json');
     }
 
+    //获取单个物品信息
+    this.single=function(id,callback){
+        $.post(Config.UrlHead + '/orderForm/single'
+            , {orderformid:id}
+            , function (data) {
+                callback(data);
+            }, 'json');
+    }
+
     //获取物品订单
     this.orderWithGoods=function(params,callback){
         $.post(Config.UrlHead + '/orderForm/orderWithGoods'
+            , params
+            , function (data) {
+                callback(data);
+            }, 'json');
+    }
+
+    //修改
+    this.update=function(params,callback){
+        $.post(Config.UrlHead + '/orderForm/update'
             , params
             , function (data) {
                 callback(data);

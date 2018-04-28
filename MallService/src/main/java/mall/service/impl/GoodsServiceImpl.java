@@ -15,10 +15,12 @@ import com.github.miemiedev.mybatis.paginator.domain.PageList;
 
 import mall.base.dao.GoodsMapper;
 import mall.base.model.Goods;
+import mall.base.model.Ordergoods;
 import mall.base.model.dto.GoodsDto;
 import mall.service.GoodsImgService;
 import mall.service.GoodsKindService;
 import mall.service.GoodsService;
+import mall.service.OrderFormService;
 import mall.uimodel.EUIPageList;
 import mall.util.RandomNum;
 
@@ -31,6 +33,8 @@ public class GoodsServiceImpl implements GoodsService {
 	private GoodsKindService goodsKindService;
 	@Resource
 	private GoodsImgService goodsImgService;
+	@Resource
+	private OrderFormService orderFormService;
 
 	@Override
 	public GoodsDto single(String goodsid) {
@@ -53,10 +57,11 @@ public class GoodsServiceImpl implements GoodsService {
 		}
 		return new EUIPageList<GoodsDto>(pageList.getPaginator().getTotalCount(), result);
 	}
-	
+
 	@Override
 	public EUIPageList<GoodsDto> list4search(String goodsname, String goodskindid, int orderType, int page, int rows) {
-		PageList<Goods> pageList = goodsMapper.searchWithPage(goodsname, goodskindid, orderType, new PageBounds(page, rows));
+		PageList<Goods> pageList = goodsMapper.searchWithPage(goodsname, goodskindid, orderType,
+				new PageBounds(page, rows));
 		List<GoodsDto> result = new ArrayList<GoodsDto>();
 		for (Goods item : pageList) {
 			GoodsDto goodsDto = new GoodsDto(item);
@@ -88,6 +93,28 @@ public class GoodsServiceImpl implements GoodsService {
 			goodsImgService.update(Arrays.asList(urlList), goods.getGoodsid());
 		}
 		goodsMapper.update(goods);
+	}
+
+	@Override
+	@Transactional(rollbackFor = { Exception.class })
+	public void update4count(Goods goods, String userid) throws Exception {
+		// 修改数量
+		Goods updateGoods = goodsMapper.getSingle(goods.getGoodsid());
+		updateGoods.setGoodscount(updateGoods.getGoodscount() + goods.getGoodscount());
+		goodsMapper.update(updateGoods);
+		// 加入订单
+		List<Ordergoods> list = new ArrayList<Ordergoods>();
+		Ordergoods ordergoods = new Ordergoods();
+		ordergoods.setOrdergoodsid(RandomNum.getLGID());
+		ordergoods.setGoodsid(updateGoods.getGoodsid());
+		ordergoods.setOrdergoodscost(updateGoods.getGoodscost());
+		ordergoods.setOrdergoodscount(goods.getGoodscount());
+		ordergoods.setOrdergoodsimgurl(updateGoods.getGoodsimgurl());
+		ordergoods.setOrdergoodsname(updateGoods.getGoodsname());
+		ordergoods.setOrdergoodspercentage(updateGoods.getGoodspercentage());
+		ordergoods.setOrdergoodsprice(updateGoods.getGoodsprice());
+		list.add(ordergoods);
+		orderFormService.addLogOrder(list, userid);
 	}
 
 	@Override

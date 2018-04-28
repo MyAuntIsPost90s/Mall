@@ -64,8 +64,19 @@
             {field:'username',width:100,align:'center',title:"用户名"},
             {field:'realname',width:100,align:'center',title:"名称"},
             {field:'wages',width:50,align:'center',title:"基本工资"},
-            {field:'allcount',width:50,align:'center',title:"销售数量（件）"},
-            {field:'allprice',width:50,align:'center',title:"销售额"},
+            {field:'allcount',width:50,align:'center',title:"销售/采购数量（件）"},
+            {
+                field:'allprice',
+                width:50,
+                align:'center',
+                title:"销售额",
+                formatter:function(val,row){
+                    if(row.usertype!=1){
+                        return 0;
+                    }
+                    return val;
+                }
+            },
             {field:'allpercentage',width:50,align:'center',title:"总提成"},
             {
                 field:'userid',

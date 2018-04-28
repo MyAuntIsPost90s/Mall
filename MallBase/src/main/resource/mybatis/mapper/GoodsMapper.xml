@@ -161,7 +161,7 @@
       and goodsId = #{goodsid}
     </if>
     <if test="goodsname != null" >
-      and goodsName = #{goodsname}
+      and goodsName like CONCAT('%',#{goodsname},'%')
     </if>
     <if test="goodscost != null" >
       and goodsCost = #{goodscost}

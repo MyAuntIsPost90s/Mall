@@ -20,6 +20,8 @@ public class Orderform {
 
 	private String orderdesc;
 
+	private String orderflow;
+
 	public String getOrderid() {
 		return orderid;
 	}
@@ -74,5 +76,13 @@ public class Orderform {
 
 	public void setOrderdesc(String orderdesc) {
 		this.orderdesc = orderdesc;
+	}
+
+	public String getOrderflow() {
+		return orderflow;
+	}
+
+	public void setOrderflow(String orderflow) {
+		this.orderflow = orderflow;
 	}
 }

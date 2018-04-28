@@ -26,7 +26,7 @@
 			targetProject="${srcMainJava}" 
 			type="XMLMAPPER" />
 
-		<table tableName="ordergoods" enableCountByExample="false" enableInsert="true" enableDeleteByExample="false"
+		<table tableName="orderform" enableCountByExample="false" enableInsert="true" enableDeleteByExample="false"
 		 	enableDeleteByPrimaryKey="false" enableSelectByExample="false" enableSelectByPrimaryKey="false"
 		 	enableUpdateByExample="false" enableUpdateByPrimaryKey="false" />
 	</context>
