@@ -53,6 +53,14 @@ public interface OrderGoodsService {
 	void add(Ordergoods ordergoods) throws Exception;
 
 	/**
+	 * 添加入库订单商品
+	 * 
+	 * @param ordergoods
+	 * @throws Exception
+	 */
+	void addBuy(Ordergoods ordergoods) throws Exception;
+
+	/**
 	 * 修改
 	 * 
 	 * @param userinfo

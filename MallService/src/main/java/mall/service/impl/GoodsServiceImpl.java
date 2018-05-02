@@ -114,7 +114,7 @@ public class GoodsServiceImpl implements GoodsService {
 		ordergoods.setOrdergoodspercentage(updateGoods.getGoodspercentage());
 		ordergoods.setOrdergoodsprice(updateGoods.getGoodsprice());
 		list.add(ordergoods);
-		orderFormService.addLogOrder(list, userid);
+		orderFormService.addBuyLogOrder(list, userid);
 	}
 
 	@Override

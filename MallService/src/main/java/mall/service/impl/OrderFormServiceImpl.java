@@ -101,6 +101,29 @@ public class OrderFormServiceImpl implements OrderFormService {
 	}
 
 	@Override
+	public void addBuyLogOrder(List<Ordergoods> ordergoods, String userid) throws Exception {
+		Orderform orderform = new Orderform();
+		orderform.setOrderid(RandomNum.getLGID());
+		// 生成订单详情
+		float sum = 0f;
+		for (Ordergoods item : ordergoods) {
+			Goods goods = goodsService.single(item.getGoodsid());
+			item.setOrdergoodsimgurl(goods.getGoodsimgurl());
+			item.setOrderid(orderform.getOrderid());
+			orderGoodsService.addBuy(item);
+			sum += item.getOrdergoodscount() * item.getOrdergoodsprice();
+		}
+		// 生成订单
+		orderform.setOrdertime(new Date());
+		orderform.setOrderprice(sum);
+		orderform.setUserid(userid);
+		orderform.setOrderdesc(OrderType.LOG.valueZh);
+		orderform.setOrdertype(OrderType.LOG.value);
+		orderform.setOrderstatus(OrderStatus.SEND.value);
+		orderformMapper.insert(orderform);
+	}
+
+	@Override
 	@Transactional(rollbackFor = { Exception.class })
 	public void addUserOrder(String userid, String addressid) throws Exception {
 		Shopcart condition = new Shopcart();

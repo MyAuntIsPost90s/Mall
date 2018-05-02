@@ -78,6 +78,18 @@ public class OrderGoodsServiceImpl implements OrderGoodsService {
 		PageList<Ordergoods> pageList = ordergoodsMapper.getListWithPage(ordergoods, new PageBounds(page, rows));
 		return new EUIPageList<Ordergoods>(pageList.getPaginator().getTotalCount(), pageList);
 	}
+	
+
+	@Override
+	public void addBuy(Ordergoods ordergoods) throws Exception {
+		Goods goods = goodsService.single(ordergoods.getGoodsid());
+		ordergoods.setOrdergoodsid(RandomNum.getLGID());
+		ordergoods.setOrdergoodscost(goods.getGoodscost());
+		ordergoods.setOrdergoodsname(goods.getGoodsname());
+		ordergoods.setOrdergoodsprice(goods.getGoodsprice());
+		ordergoods.setOrdergoodspercentage(goods.getGoodspercentage());
+		ordergoodsMapper.insert(ordergoods);
+	}
 
 	@Override
 	@Transactional(rollbackFor = { Exception.class })

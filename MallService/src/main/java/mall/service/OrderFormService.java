@@ -25,7 +25,7 @@ public interface OrderFormService {
 	 * @return
 	 */
 	EUIPageList<Orderform> list(Orderform orderform, int page, int rows);
-	
+
 	/**
 	 * 获取订单集合
 	 * 
@@ -34,7 +34,7 @@ public interface OrderFormService {
 	 * @param rows
 	 * @return
 	 */
-	EUIPageList<OrderWithGoodsDto> orderWithGoods(Orderform orderform,int page,int rows);
+	EUIPageList<OrderWithGoodsDto> orderWithGoods(Orderform orderform, int page, int rows);
 
 	/**
 	 * 添加（记录订单）
@@ -43,6 +43,15 @@ public interface OrderFormService {
 	 * @param stringBuilder
 	 */
 	void addLogOrder(List<Ordergoods> ordergoods, String userid) throws Exception;
+
+	/**
+	 * 添加采购记录单
+	 * 
+	 * @param ordergoods
+	 * @param userid
+	 * @throws Exception
+	 */
+	void addBuyLogOrder(List<Ordergoods> ordergoods, String userid) throws Exception;
 
 	/**
 	 * 添加（用户订单）
