@@ -94,7 +94,7 @@
       and feedbackId = #{feedbackid}
     </if>
     <if test="feedbackcontent != null" >
-      and feedbackContent = #{feedbackcontent}
+      and feedbackContent like concat('%',#{feedbackcontent},'%')
     </if>
     <if test="feedbacktime != null" >
       and feedbackTime = #{feedbacktime}

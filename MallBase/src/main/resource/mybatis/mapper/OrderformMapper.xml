@@ -152,7 +152,7 @@
       and orderStatus = #{orderstatus}
     </if>
     <if test="orderdesc != null" >
-      and orderDesc = #{orderdesc}
+      and orderDesc like concat('%',#{orderdesc},'%')
     </if>
     <if test="orderflow != null" >
       and orderFlow = #{orderflow}

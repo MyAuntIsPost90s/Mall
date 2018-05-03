@@ -70,4 +70,26 @@ public class OrderGoodsController {
 			requestHolder.err("操作失败", e);
 		}
 	}
+
+	/**
+	 * 获取订单详情集合
+	 * 
+	 * @param request
+	 * @param response
+	 * @param ordergoods
+	 * @param page
+	 * @param rows
+	 */
+	@ResponseBody
+	@RequestMapping("list4count")
+	public void list4count(HttpServletRequest request, HttpServletResponse response, String userid, int page,
+			int rows) {
+		RequestHolder requestHolder = RequestHolder.get(request, response);
+		try {
+			EUIPageList<Ordergoods> list = orderGoodsService.list4count(userid, page, rows);
+			requestHolder.success(list);
+		} catch (Exception e) {
+			requestHolder.err("操作失败", e);
+		}
+	}
 }

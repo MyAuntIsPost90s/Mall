@@ -51,7 +51,7 @@
         }
         var condition = $('#inp-condition').val();
         if(condition==''){
-            $('#table-goods').datagrid('load',{});
+            $('#table-goods').datagrid('load',{goodskindid:goodskindid});
             return;
         }
         $('#table-goods').datagrid('load',{goodsname:condition,goodskindid:goodskindid});

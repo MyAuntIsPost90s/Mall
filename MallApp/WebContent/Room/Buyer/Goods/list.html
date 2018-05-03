@@ -68,7 +68,7 @@
         }
         var condition = $('#inp-condition').val();
         if(condition==''){
-            $('#table-goods').datagrid('load',{});
+            $('#table-goods').datagrid('load',{goodskindid:goodskindid});
             return;
         }
         $('#table-goods').datagrid('load',{goodsname:condition,goodskindid:goodskindid});
@@ -177,7 +177,7 @@
                 }
             },
             {field:'goodsname',width:100,align:'center',title:"名称"},
-            {field:'goodscount',width:50,align:'center',title:"数量"},
+            {field:'goodscount',width:50,align:'center',title:"库存"},
             {field:'goodscost',width:50,align:'center',title:"成本"},
             {field:'goodsprice',width:50,align:'center',title:"售价"},
             {field:'goodspercentage',width:50,align:'center',title:"提成"}

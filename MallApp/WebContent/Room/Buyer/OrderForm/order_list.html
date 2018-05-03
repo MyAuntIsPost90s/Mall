@@ -17,7 +17,12 @@
 </head>
 <body>
 <div class="easyui-layout" data-options='fit:"true"'>
-    <table id="table-orderform"></table>
+    <div id="tb-orderform">
+        <label class="layui-form-label layui-inline" style="width: 50px;height: 30px;line-height: 30px;padding: 0">搜索：</label>
+        <input type="text" id="inp-condition" class="layui-input layui-input-inline" style="width: 150px;height: 30px" />
+        <button onclick="search()" class="layui-btn layui-btn-sm layui-btn-primary" type="button"><i class="layui-icon">&#xe615;</i> 搜索</button>
+    </div>
+    <table id="table-orderform" data-options="toolbar:'#tb-orderform'"></table>
 </div>
 <script id="lay-orderform" type="text/html">
     <div style="padding: 10px;">
@@ -42,6 +47,15 @@
         initDataGrid();
     })
 
+    //搜索
+    function search(){
+        var condition = $('#inp-condition').val();
+        if(condition==''){
+            $('#table-orderform').datagrid('load',{ordertype:2});
+            return;
+        }
+        $('#table-orderform').datagrid('load',{orderdesc:condition,ordertype:2});
+    }
 
     //保存
     function save() {

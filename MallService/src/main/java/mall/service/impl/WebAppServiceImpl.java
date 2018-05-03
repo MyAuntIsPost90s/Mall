@@ -58,7 +58,7 @@ public class WebAppServiceImpl implements WebAppService {
 			goodskind.setGoodskindname(goodskinds.get(i).getGoodskindname());
 			goodskind.setGoodskindnote(goodskinds.get(i).getGoodskindnote());
 			item.put("goodskind", goodskind);
-			item.put("goods", goodsService.list(condition, 1, 7).getRows());
+			item.put("goods", goodsService.list(condition, 1, 10).getRows());
 			goods.add(item);
 		}
 		result.put("banners", banners);

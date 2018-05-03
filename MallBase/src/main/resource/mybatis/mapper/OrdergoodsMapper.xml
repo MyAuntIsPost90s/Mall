@@ -232,4 +232,19 @@
 	</if>
   </select>
   
+  <select id="list4count" resultType="mall.base.model.Ordergoods">
+  	SELECT og.goodsId
+	,og.orderGoodsName
+	,SUM(og.orderGoodsCost) orderGoodsCost
+	,SUM(og.orderGoodsCount) orderGoodsCount
+	,SUM(og.orderGoodsPercentage) orderGoodsPercentage
+	,SUM(og.orderGoodsPrice) orderGoodsPrice
+	FROM ordergoods og
+	LEFT JOIN orderform o ON o.orderId=og.orderId
+	<if test="userid != null">
+		WHERE userid=#{userid}
+	</if>
+	GROUP BY og.goodsId,og.orderGoodsName
+  </select>
+  
 </mapper>

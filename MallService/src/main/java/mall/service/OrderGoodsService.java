@@ -45,6 +45,16 @@ public interface OrderGoodsService {
 	EUIPageList<Ordergoods> list(Ordergoods ordergoods, int page, int rows);
 
 	/**
+	 * 获取统计集合
+	 * 
+	 * @param userid
+	 * @param page
+	 * @param rows
+	 * @return
+	 */
+	EUIPageList<Ordergoods> list4count(String userid, int page, int rows);
+
+	/**
 	 * 添加
 	 * 
 	 * @param userinfo
