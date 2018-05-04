@@ -24,7 +24,12 @@
 </head>
 <body>
 <div class="easyui-layout" data-options='fit:"true",border:false'>
-    <table id="table-orderform"></table>
+    <div id="tb-orderform">
+        <label class="layui-form-label layui-inline" style="width: 50px;height: 30px;line-height: 30px;padding: 0">搜索：</label>
+        <input type="text" id="inp-condition" class="layui-input layui-input-inline" style="width: 150px;height: 30px" />
+        <button onclick="search()" class="layui-btn layui-btn-sm layui-btn-primary" type="button"><i class="layui-icon">&#xe615;</i> 搜索</button>
+    </div>
+    <table id="table-orderform" data-options="toolbar:'#tb-orderform'"></table>
 </div>
 <script src="../../Contents/lib/layui/layui.all.js"></script>
 <script>
@@ -34,9 +39,19 @@
         initDataGrid();
     })
 
+    //搜索
+    function search(){
+        var condition = $('#inp-condition').val();
+        if(condition==''){
+            $('#table-orderform').datagrid('load',{});
+            return;
+        }
+        $('#table-orderform').datagrid('load',{ordergoodsname:condition});
+    }
+
     //初始化表格数据
     function initDataGrid() {
-        EasyUIUtil.initDataGrid('#table-orderform', Config.UrlHead + "/orderGoods/list4count",getColumns(),{orderid:orderid});
+        EasyUIUtil.initDataGrid('#table-orderform', Config.UrlHead + "/orderGoods/list4count",getColumns(),{});
         var pager=$('#table-orderform').datagrid('getPager');
         pager.pagination({
             showPageList: true,
@@ -52,7 +67,7 @@
         var columns=[[
             {field:'ordergoodsname',width:100,align:'center',title:"商品名称"},
             {field:'ordergoodsprice',width:100,align:'center',title:"总售价"},
-            {field:'ordergoodscoste',width:100,align:'center',title:"总成本"},
+            {field:'ordergoodscost',width:100,align:'center',title:"总成本"},
             {field:'ordergoodscount',width:100,align:'center',title:"销售数量"}
         ]];
         return columns;

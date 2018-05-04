@@ -80,8 +80,8 @@ public class OrderGoodsServiceImpl implements OrderGoodsService {
 	}
 
 	@Override
-	public EUIPageList<Ordergoods> list4count(String userid, int page, int rows) {
-		PageList<Ordergoods> pageList = ordergoodsMapper.list4count(userid, new PageBounds(page, rows));
+	public EUIPageList<Ordergoods> list4count(String userid, String ordergoodsname, int page, int rows) {
+		PageList<Ordergoods> pageList = ordergoodsMapper.list4count(userid, ordergoodsname, new PageBounds(page, rows));
 		return new EUIPageList<Ordergoods>(pageList.getPaginator().getTotalCount(), pageList);
 	}
 

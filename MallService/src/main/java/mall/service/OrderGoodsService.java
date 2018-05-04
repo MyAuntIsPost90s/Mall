@@ -52,7 +52,7 @@ public interface OrderGoodsService {
 	 * @param rows
 	 * @return
 	 */
-	EUIPageList<Ordergoods> list4count(String userid, int page, int rows);
+	EUIPageList<Ordergoods> list4count(String userid, String ordergoodsname, int page, int rows);
 
 	/**
 	 * 添加

@@ -30,5 +30,6 @@ public interface OrdergoodsMapper extends BaseMapper<Ordergoods> {
 	 * @param pageBounds
 	 * @return
 	 */
-	PageList<Ordergoods> list4count(@Param("userid") String userid, PageBounds pageBounds);
+	PageList<Ordergoods> list4count(@Param("userid") String userid, @Param("ordergoodsname") String ordergoodsname,
+			PageBounds pageBounds);
 }

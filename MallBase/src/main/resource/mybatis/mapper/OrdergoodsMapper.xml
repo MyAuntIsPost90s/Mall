@@ -241,8 +241,12 @@
 	,SUM(og.orderGoodsPrice) orderGoodsPrice
 	FROM ordergoods og
 	LEFT JOIN orderform o ON o.orderId=og.orderId
+	where o.orderType=2
 	<if test="userid != null">
-		WHERE userid=#{userid}
+		and userid=#{userid}
+	</if>
+	<if test="ordergoodsname != null">
+		and og.ordergoodsname like concat('%',#{ordergoodsname},'%')
 	</if>
 	GROUP BY og.goodsId,og.orderGoodsName
   </select>

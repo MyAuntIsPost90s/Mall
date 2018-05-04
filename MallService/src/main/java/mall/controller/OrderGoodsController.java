@@ -82,11 +82,11 @@ public class OrderGoodsController {
 	 */
 	@ResponseBody
 	@RequestMapping("list4count")
-	public void list4count(HttpServletRequest request, HttpServletResponse response, String userid, int page,
-			int rows) {
+	public void list4count(HttpServletRequest request, HttpServletResponse response, String userid,
+			String ordergoodsname, int page, int rows) {
 		RequestHolder requestHolder = RequestHolder.get(request, response);
 		try {
-			EUIPageList<Ordergoods> list = orderGoodsService.list4count(userid, page, rows);
+			EUIPageList<Ordergoods> list = orderGoodsService.list4count(userid, ordergoodsname, page, rows);
 			requestHolder.success(list);
 		} catch (Exception e) {
 			requestHolder.err("操作失败", e);
