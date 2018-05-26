@@ -319,7 +319,7 @@
                 var count=parseInt($inp.val());
                 var price=parseFloat($(this).find('.J_Price').html());
                 sum+=price*count;
-                $(this).find('.J_ItemSum').val(price*count);
+                $(this).find('.J_ItemSum').html(price*count);
                 index++;
             });
             $('#J_SelectedItemsCount').html(index);
