@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>通讯录列表</title>
+    <link rel="stylesheet" href="../../Contents/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="../../Contents/lib/easyui-theme/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../../Contents/lib/easyui-theme/themes/insdep/icon.css">
+    <script src="../../Contents/js/config.js"></script>
+    <script src="../../Contents/js/jquery.min.js"></script>
+    <script src="../../Contents/lib/easyui-theme/jquery.easyui.min.js"></script>
+    <script src="../../Contents/lib/easyui-theme/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../../Contents/js/easyui.util.js"></script>
+    <script src="../../Contents/lib/lingshiframework/lingshi_base.js"></script>
+    <script src="../../Contents/js/md5.js"></script>
+    <script src="../../Contents/js/layui.util.js"></script>
+</head>
+<body>
+<div class="easyui-layout" data-options='fit:"true"'>
+    <table id="table-addresslist" data-options="toolbar:'#tb-addresslist'"></table>
+    <div id="tb-addresslist">
+        <label class="layui-form-label layui-inline" style="width: 50px;height: 30px;line-height: 30px;padding: 0">搜索：</label>
+        <input type="text" id="inp-condition" class="layui-input layui-input-inline" style="width: 150px;height: 30px" />
+        <button onclick="search()" class="layui-btn layui-btn-sm layui-btn-primary" type="button"><i class="layui-icon">&#xe615;</i> 搜索</button>
+    </div>
+</div>
+<script id="lay-addresslistform" type="text/html">
+    <div style="padding: 10px;">
+        <form class="layui-form layui-form-pane" id="form-addresslist">
+            <input id="opt-type" type="hidden" name="type" />
+            <input type="hidden" name="addresslistid" />
+            <div class="layui-form-item">
+                <label class="layui-form-label">姓名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="addresslistname" required  lay-verify="username" placeholder="请输入真实姓名" data-valid="name:'真实姓名',length:[1,20]" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">联系方式</label>
+                <div class="layui-input-block">
+                    <input type="text" name="addresslistphone" required placeholder="请输入联系方式" data-valid="name:'联系方式',length:[1,20]" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item" style="text-align: right">
+                <button type="button" class="layui-btn" onclick="save()">保存</button>
+            </div>
+        </form>
+    </div>
+</script>
+<script src="../../Contents/lib/layui/layui.all.js"></script>
+<script>
+    $(function () {
+        initDataGrid();
+    })
+
+    //搜索
+    function search(){
+        var condition = $('#inp-condition').val();
+        if(condition==''){
+            $('#table-addresslist').datagrid('load',{});
+            return;
+        }
+        $('#table-addresslist').datagrid('load',{addresslistname:condition});
+    }
+
+    //保存
+    function save() {
+        var postData=FormUtil.getFormMap("#form-addresslist");
+        if(postData==null||postData==''){
+            return;
+        }
+        var url=Config.UrlHead+'/addressList/add';
+        if(postData.type=='edit'){
+            url=Config.UrlHead+'/addressList/update';
+        }
+        $.post(url
+            ,postData
+            ,function (data) {
+                if(data.code==1){
+                    layer.closeAll();
+                }
+                layer.msg(data.msg);
+                $('#table-addresslist').datagrid('reload');
+            },'json')
+    }
+
+    //批量删除
+    function batchDelete() {
+        var rows = $('#table-addresslist').datagrid('getChecked');
+        if (rows.length < 1) {
+            return;
+        }
+        var ids = [];
+        for (var i = 0; i < rows.length; i++) {
+            ids.push(rows[i].addresslistid);
+        }
+        layer.confirm("是否确定删除", function (index) {
+            $.ajax({
+                url: Config.UrlHead + '/addressList/batchDelete',
+                contentType: "application/json ; charset=utf-8",
+                data: JSON.stringify(ids),
+                method: 'post',
+                dataType: 'json',
+                success: function (data) {
+                    layer.close(index);
+                    layer.msg(data.msg);
+                    $('#table-addresslist').datagrid('reload');
+                }
+            });
+        }, function (index) {
+            layer.close(index);
+        });
+    }
+
+    //点击删除事件
+    function del(id) {
+        var ids = [];
+        ids.push(id);
+        layer.confirm("是否确定删除", function (index) {
+            $.ajax({
+                url: Config.UrlHead + '/addressList/batchDelete',
+                contentType: "application/json ; charset=utf-8",
+                data: JSON.stringify(ids),
+                method: 'post',
+                dataType: 'json',
+                success: function (data) {
+                    layer.close(index);
+                    layer.msg(data.msg);
+                    $('#table-addresslist').datagrid('reload');
+                }
+            });
+        }, function (index) {
+            layer.close(index);
+        });
+    }
+
+    //展示添加
+    function showAddAddressList() {
+        layer.open({
+            type:1
+            ,title:'添加通讯录'
+            ,content:$('#lay-addresslistform').html()
+            ,success:function(){
+                FormUtil.loadForm('#form-addresslist',{type:'add'});
+                layui.form.render();
+            }
+        })
+    }
+
+    //展示编辑框
+    function showEdit(id){
+        var index = layer.open({type:3});
+        $.post(Config.UrlHead+'/addressList/single'
+            ,{addresslistid:id}
+            ,function (data) {
+                layer.close(index);
+                layer.open({
+                    type:1
+                    ,title:'修改通讯录'
+                    ,content:$('#lay-addresslistform').html()
+                    ,success:function(){
+                        data.data.type='edit';
+                        if(data.code==1){
+                            FormUtil.loadForm('#form-addresslist',data.data);
+                        }else {
+                            layer.msg(data.msg);
+                        }
+                        layui.form.render();
+                    }
+                })
+            },'json');
+    }
+
+    //初始化表格数据
+    function initDataGrid() {
+        EasyUIUtil.initDataGrid('#table-addresslist', Config.UrlHead + "/addressList/list",getColumns());
+        var pager=$('#table-addresslist').datagrid('getPager');
+        pager.pagination({
+            showPageList: true,
+            buttons: [{
+                iconCls: 'icon-add',
+                handler: function () {
+                    showAddAddressList();
+                }
+            }, {
+                iconCls: 'icon-remove',
+                handler: function () {
+                    batchDelete();
+                }
+            },{
+                text:'导出通讯录',
+                handler: function () {
+                    LingShiFileUtil.download(Config.UrlHead+"/addressList/export");
+                }
+            }],
+            onBeforeRefresh: function () {
+                return true;
+            }
+        });
+    }
+
+    //获取列
+    function getColumns(){
+        var columns=[[
+            {field:'ck',checkbox:true},
+            {
+                field:'addresslistid',
+                width:50,
+                align:'center',
+                title:"操作",
+                formatter:function(val,row){
+                    return '<button class="layui-btn layui-btn-xs layui-btn-danger" onclick="del(\'' + val + '\')"><i class="layui-icon">&#xe640;</i>移除</button>'
+                        +'<button class="layui-btn layui-btn-xs" onclick="showEdit(\'' + val + '\')"><i class="layui-icon">&#xe642;</i>编辑</button>'
+                }
+            },
+            {field:'addresslistname',width:100,align:'center',title:"姓名"},
+            {field:'addresslistphone',width:100,align:'center',title:"联系方式"}
+        ]];
+        return columns;
+    }
+</script>
+</body>
+</html>

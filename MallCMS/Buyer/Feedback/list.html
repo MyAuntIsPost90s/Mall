@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户反馈列表</title>
+    <link rel="stylesheet" href="../../Contents/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="../../Contents/lib/easyui-theme/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../../Contents/lib/easyui-theme/themes/insdep/icon.css">
+    <script src="../../Contents/js/config.js"></script>
+    <script src="../../Contents/js/jquery.min.js"></script>
+    <script src="../../Contents/lib/easyui-theme/jquery.easyui.min.js"></script>
+    <script src="../../Contents/lib/easyui-theme/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../../Contents/js/easyui.util.js"></script>
+    <script src="../../Contents/lib/lingshiframework/lingshi_base.js"></script>
+    <script src="../../Contents/js/md5.js"></script>
+    <script src="../../Contents/js/layui.util.js"></script>
+</head>
+<body>
+<div class="easyui-layout" data-options='fit:"true"'>
+    <table id="table-feedback"></table>
+</div>
+<script id="lay-feedbackform" type="text/html">
+    <div style="padding: 10px;">
+        <form class="layui-form layui-form-pane" id="form-feedback">
+            <input id="opt-type" type="hidden" name="type" />
+            <input type="hidden" name="feedbackid" />
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">反馈内容</label>
+                <div class="layui-input-block">
+                    <textarea class="layui-textarea" readonly id="ta-feedbackname" name="feedbackname" style="height: 200px;width: 300px"></textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+</script>
+<script src="../../Contents/lib/layui/layui.all.js"></script>
+<script>
+    $(function () {
+        initDataGrid();
+    })
+
+    //批量删除
+    function batchDelete() {
+        var rows = $('#table-feedback').datagrid('getChecked');
+        if (rows.length < 1) {
+            return;
+        }
+        var ids = [];
+        for (var i = 0; i < rows.length; i++) {
+            ids.push(rows[i].feedbackid);
+        }
+        layer.confirm("是否确定删除", function (index) {
+            $.ajax({
+                url: Config.UrlHead + '/feedback/batchDelete',
+                contentType: "application/json ; charset=utf-8",
+                data: JSON.stringify(ids),
+                method: 'post',
+                dataType: 'json',
+                success: function (data) {
+                    layer.close(index);
+                    layer.msg(data.msg);
+                    $('#table-feedback').datagrid('reload');
+                }
+            });
+        }, function (index) {
+            layer.close(index);
+        });
+    }
+
+    //点击删除事件
+    function del(id) {
+        var ids = [];
+        ids.push(id);
+        layer.confirm("是否确定删除", function (index) {
+            $.ajax({
+                url: Config.UrlHead + '/feedback/batchDelete',
+                contentType: "application/json ; charset=utf-8",
+                data: JSON.stringify(ids),
+                method: 'post',
+                dataType: 'json',
+                success: function (data) {
+                    layer.close(index);
+                    layer.msg(data.msg);
+                    $('#table-feedback').datagrid('reload');
+                }
+            });
+        }, function (index) {
+            layer.close(index);
+        });
+    }
+
+    //展示详情
+    function showDetail(content){
+        layer.open({
+            type:1
+            ,title:'查看详情'
+            ,content:$('#lay-feedbackform').html()
+            ,success:function(){
+                $('#ta-feedbackname').html(content);
+                layui.form.render();
+            }
+        })
+    }
+
+    //初始化表格数据
+    function initDataGrid() {
+        EasyUIUtil.initDataGrid('#table-feedback', Config.UrlHead + "/feedback/list",getColumns());
+        var pager=$('#table-feedback').datagrid('getPager');
+        pager.pagination({
+            showPageList: true,
+            buttons: [{
+                iconCls: 'icon-remove',
+                handler: function () {
+                    batchDelete();
+                }
+            }],
+            onBeforeRefresh: function () {
+                return true;
+            }
+        });
+    }
+
+    //获取列
+    function getColumns(){
+        var columns=[[
+            {field:'ck',checkbox:true},
+            {
+                field:'feedbackid',
+                width:50,
+                align:'center',
+                title:"操作",
+                formatter:function(val,row){
+                    return '<button class="layui-btn layui-btn-xs layui-btn-danger" onclick="del(\'' + val + '\')"><i class="layui-icon">&#xe640;</i>移除</button>'
+                        +'<button class="layui-btn layui-btn-xs" onclick="showDetail(\'' + row.feedbackcontent + '\')"><i class="layui-icon">&#xe60a;</i>查看</button>'
+                }
+            },
+            {field:'feedbackcontent',width:100,align:'center',title:"反馈内容"},
+            {field:'feedbacktime',width:100,align:'center',title:"反馈时间"},
+            {
+                field:'userid',
+                width:50,
+                align:'center',
+                title:"反馈人",
+                formatter:function(val,row){
+                    return row.userinfo.realname;
+                }
+            }
+        ]];
+        return columns;
+    }
+</script>
+</body>
+</html>

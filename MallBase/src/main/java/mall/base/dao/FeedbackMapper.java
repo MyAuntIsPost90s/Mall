@@ -1,14 +1,13 @@
 package mall.base.dao;
 
-import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
-import com.github.miemiedev.mybatis.paginator.domain.PageList;
-
-import lingshi.mybaties.mapperextend.BaseMapper;
+import com.ch.common.mybatis.BaseMapper;
 import mall.base.model.Feedback;
 import mall.base.model.dto.FeedbackUserDto;
 
+import java.util.List;
+
 public interface FeedbackMapper extends BaseMapper<Feedback> {
 
-	PageList<FeedbackUserDto> getFeedbackUserWithPage(Feedback feedback, PageBounds pageBounds);
+	List<FeedbackUserDto> getFeedbackUserWithPage(Feedback feedback);
 	
 }

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <Appenders>
+        <Console name="CONSOLE" target="SYSTEM_OUT">
+            <PatternLayout charset="UTF-8" pattern="[%-5p] %d %c - %m%n"/>
+        </Console>
+
+        <File name="File" fileName="C:/logs/mall_service.log">
+            <Filters>
+                <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <PatternLayout pattern="%m%n"/>
+        </File>
+    </Appenders>
+
+    <Loggers>
+        <root level="debug">
+            <AppenderRef ref="CONSOLE"/>
+            <AppenderRef ref="File"/>
+        </root>
+    </Loggers>
+</configuration>

@@ -1,21 +1,17 @@
 package mall.controller;
 
-import java.util.List;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.ch.web.gateway.session.SessionHolder;
+import mall.base.model.Goodskind;
+import mall.service.GoodsKindService;
+import mall.uimodel.EUIPageList;
+import mall.uimodel.EUITree;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import lingshi.web.model.RequestHolder;
-import mall.base.model.Goodskind;
-import mall.service.GoodsKindService;
-import mall.uimodel.EUIPageList;
-import mall.uimodel.EUITree;
+import javax.annotation.Resource;
+import java.util.List;
 
 @Controller
 @RequestMapping("/goodsKind")
@@ -26,115 +22,103 @@ public class GoodsKindController {
 
 	/**
 	 * 获取集合列表
-	 * 
-	 * @param request
-	 * @param response
+	 *
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
-	public void list(HttpServletRequest request, HttpServletResponse response, Goodskind goodskind, int page,
+	public void list(Goodskind goodskind, int page,
 			int rows) {
-		RequestHolder requestHolder = RequestHolder.get(request, response);
+		SessionHolder sessionHolder = SessionHolder.currentSessionHolder();
 		try {
 			EUIPageList<Goodskind> list = goodsKindService.list(goodskind, page, rows);
-			requestHolder.success(list);
+			sessionHolder.success(list);
 		} catch (Exception e) {
-			requestHolder.err("操作失败", e);
+			sessionHolder.fail("操作失败", e);
 		}
 	}
 
 	/**
 	 * 获取树形集合列表
-	 * 
-	 * @param request
-	 * @param response
+	 *
 	 * @param goodskind
 	 */
 	@ResponseBody
 	@RequestMapping("/tree")
-	public void tree(HttpServletRequest request, HttpServletResponse response, Goodskind goodskind) {
-		RequestHolder requestHolder = RequestHolder.get(request, response);
+	public void tree(Goodskind goodskind) {
+		SessionHolder sessionHolder = SessionHolder.currentSessionHolder();
 		try {
 			List<EUITree> list = goodsKindService.tree(goodskind);
-			requestHolder.success(list);
+			sessionHolder.success(list);
 		} catch (Exception e) {
-			requestHolder.err("操作失败", e);
+			sessionHolder.fail("操作失败", e);
 		}
 	}
 
 	/**
 	 * 获取单条数据
-	 * 
-	 * @param request
-	 * @param response
-	 * @param userId
+	 *
+	 * @param goodskindid
 	 */
 	@ResponseBody
 	@RequestMapping("/single")
-	public void single(HttpServletRequest request, HttpServletResponse response, String goodskindid) {
-		RequestHolder requestHolder = RequestHolder.get(request, response);
+	public void single(String goodskindid) {
+		SessionHolder sessionHolder = SessionHolder.currentSessionHolder();
 		try {
 			Goodskind goodskind = goodsKindService.single(goodskindid);
-			requestHolder.success(goodskind);
+			sessionHolder.success(goodskind);
 		} catch (Exception e) {
-			requestHolder.err("操作失败", e);
+			sessionHolder.fail("操作失败", e);
 		}
 	}
 
 	/**
 	 * 修改
-	 * 
-	 * @param request
-	 * @param response
-	 * @param userinfo
+	 *
+	 * @param goodskind
 	 */
 	@ResponseBody
 	@RequestMapping("/update")
-	public void update(HttpServletRequest request, HttpServletResponse response, Goodskind goodskind) {
-		RequestHolder requestHolder = RequestHolder.get(request, response);
+	public void update(Goodskind goodskind) {
+		SessionHolder sessionHolder = SessionHolder.currentSessionHolder();
 		try {
 			goodsKindService.update(goodskind);
-			requestHolder.success("操作成功", goodskind);
+			sessionHolder.success("操作成功", goodskind);
 		} catch (Exception e) {
-			requestHolder.err("操作失败", e);
+			sessionHolder.fail("操作失败", e);
 		}
 	}
 
 	/**
 	 * 添加
-	 * 
-	 * @param request
-	 * @param response
-	 * @param userinfo
+	 *
+	 * @param goodskind
 	 */
 	@ResponseBody
 	@RequestMapping("/add")
-	public void add(HttpServletRequest request, HttpServletResponse response, Goodskind goodskind) {
-		RequestHolder requestHolder = RequestHolder.get(request, response);
+	public void add(Goodskind goodskind) {
+		SessionHolder sessionHolder = SessionHolder.currentSessionHolder();
 		try {
 			goodsKindService.add(goodskind);
-			requestHolder.success("操作成功");
+			sessionHolder.success("操作成功");
 		} catch (Exception e) {
-			requestHolder.err("操作失败", e);
+			sessionHolder.fail("操作失败", e);
 		}
 	}
 
 	/**
 	 * 批量删除
-	 * 
-	 * @param request
-	 * @param response
+	 *
 	 * @param ids
 	 */
 	@ResponseBody
 	@RequestMapping("/batchDelete")
-	public void batchDelete(HttpServletRequest request, HttpServletResponse response, @RequestBody List<String> ids) {
-		RequestHolder requestHolder = RequestHolder.get(request, response);
+	public void batchDelete(@RequestBody List<String> ids) {
+		SessionHolder sessionHolder = SessionHolder.currentSessionHolder();
 		try {
 			goodsKindService.batchDelete(ids);
-			requestHolder.success("操作成功");
+			sessionHolder.success("操作成功");
 		} catch (Exception e) {
-			requestHolder.err("操作失败", e);
+			sessionHolder.fail("操作失败", e);
 		}
 	}
 }

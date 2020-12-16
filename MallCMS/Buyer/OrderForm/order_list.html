@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>订单列表</title>
+    <link rel="stylesheet" href="../../Contents/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="../../Contents/lib/easyui-theme/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../../Contents/lib/easyui-theme/themes/insdep/icon.css">
+    <script src="../../Contents/js/config.js"></script>
+    <script src="../../Contents/js/jquery.min.js"></script>
+    <script src="../../Contents/lib/easyui-theme/jquery.easyui.min.js"></script>
+    <script src="../../Contents/lib/easyui-theme/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../../Contents/js/easyui.util.js"></script>
+    <script src="../../Contents/lib/lingshiframework/lingshi_base.js"></script>
+    <script src="../../Contents/js/md5.js"></script>
+    <script src="../../Contents/js/layui.util.js"></script>
+</head>
+<body>
+<div class="easyui-layout" data-options='fit:"true"'>
+    <div id="tb-orderform">
+        <label class="layui-form-label layui-inline" style="width: 50px;height: 30px;line-height: 30px;padding: 0">搜索：</label>
+        <input type="text" id="inp-condition" class="layui-input layui-input-inline" style="width: 150px;height: 30px" />
+        <button onclick="search()" class="layui-btn layui-btn-sm layui-btn-primary" type="button"><i class="layui-icon">&#xe615;</i> 搜索</button>
+    </div>
+    <table id="table-orderform" data-options="toolbar:'#tb-orderform'"></table>
+</div>
+<script id="lay-orderform" type="text/html">
+    <div style="padding: 10px;">
+        <form class="layui-form layui-form-pane" id="form-orderform">
+            <input id="opt-type" type="hidden" name="type" />
+            <input id="orderid" name="orderid" type="hidden" >
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">流程</label>
+                <div class="layui-input-block">
+                    <textarea id="ta-orderflow" class="layui-textarea" style="width: 300px;height: 100px"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item" style="text-align: right">
+                <button type="button" class="layui-btn" onclick="save()">保存</button>
+            </div>
+        </form>
+    </div>
+</script>
+<script src="../../Contents/lib/layui/layui.all.js"></script>
+<script>
+    $(function () {
+        initDataGrid();
+    })
+
+    //搜索
+    function search(){
+        var condition = $('#inp-condition').val();
+        if(condition==''){
+            $('#table-orderform').datagrid('load',{ordertype:2});
+            return;
+        }
+        $('#table-orderform').datagrid('load',{orderdesc:condition,ordertype:2});
+    }
+
+    //保存
+    function save() {
+        var orderflow=$('#ta-orderflow').val();
+        var postData={orderflow:orderflow,orderid:$('#orderid').val()};
+        var url=Config.UrlHead+'/orderForm/update';
+        $.post(url
+            ,postData
+            ,function (data) {
+                if(data.code==1){
+                    layer.closeAll();
+                }
+                layer.msg(data.msg);
+            },'json')
+    }
+
+    //展示编辑框
+    function showEdit(id){
+        var index = layer.open({type:3});
+        $.post(Config.UrlHead+'/orderForm/single'
+            ,{orderformid:id}
+            ,function (data) {
+                layer.close(index);
+                layer.open({
+                    type:1
+                    ,title:'修改流程'
+                    ,content:$('#lay-orderform').html()
+                    ,success:function(){
+                        data.data.type='edit';
+                        if(data.code==1){
+                            $('#ta-orderflow').val(data.data.orderflow);
+                            $('#orderid').val(data.data.orderid);
+                        }else {
+                            layer.msg(data.msg);
+                        }
+                    }
+                })
+            },'json');
+    }
+
+    //发货
+    function send(id){
+        layer.confirm("是否确定发货", function (index) {
+            $.post(Config.UrlHead + '/orderForm/update'
+                ,{orderid:id,orderstatus:1}
+                ,function(data) {
+                    layer.close(index);
+                    layer.msg(data.msg);
+                    $('#table-orderform').datagrid('reload');
+                }
+                ,'json');
+        }, function (index) {
+            layer.close(index);
+        });
+    }
+
+    //点击删除事件
+    function del(id) {
+        var ids = [];
+        ids.push(id);
+        layer.confirm("是否确定删除", function (index) {
+            $.ajax({
+                url: Config.UrlHead + '/orderForm/batchDelete',
+                contentType: "application/json ; charset=utf-8",
+                data: JSON.stringify(ids),
+                method: 'post',
+                dataType: 'json',
+                success: function (data) {
+                    layer.close(index);
+                    layer.msg(data.msg);
+                    $('#table-orderform').datagrid('reload');
+                }
+            });
+        }, function (index) {
+            layer.close(index);
+        });
+    }
+
+    //批量删除
+    function batchDelete() {
+        var rows = $('#table-orderform').datagrid('getChecked');
+        if (rows.length < 1) {
+            return;
+        }
+        var ids = [];
+        for (var i = 0; i < rows.length; i++) {
+            ids.push(rows[i].orderid);
+        }
+        layer.confirm("是否确定删除", function (index) {
+            $.ajax({
+                url: Config.UrlHead + '/orderForm/batchDelete',
+                contentType: "application/json ; charset=utf-8",
+                data: JSON.stringify(ids),
+                method: 'post',
+                dataType: 'json',
+                success: function (data) {
+                    layer.close(index);
+                    layer.msg(data.msg);
+                    $('#table-orderform').datagrid('reload');
+                }
+            });
+        }, function (index) {
+            layer.close(index);
+        });
+    }
+
+    //初始化表格数据
+    function initDataGrid() {
+        EasyUIUtil.initDataGrid('#table-orderform', Config.UrlHead + "/orderForm/list",getColumns(),{ordertype:2});
+        var pager=$('#table-orderform').datagrid('getPager');
+        pager.pagination({
+            showPageList: true,
+            buttons: [{
+                iconCls: 'icon-remove',
+                handler: function () {
+                    batchDelete();
+                }
+            }],
+            onBeforeRefresh: function () {
+                return true;
+            }
+        });
+    }
+
+    //获取列
+    function getColumns(){
+        var columns=[[
+            {field:'ck',checkbox:true},
+            {
+                field:'userid',
+                width:150,
+                title:'操作',
+                align:'center',
+                formatter:function(val,row){
+                    var html = '<button class="layui-btn layui-btn-xs layui-btn-danger" onclick="del(\'' + row.orderid + '\')"><i class="layui-icon">&#xe640;</i>移除</button>'
+                        + '<a class="layui-btn layui-btn-xs" href="ordergoods_list.html?orderid='+row.orderid+'"><i class="layui-icon">&#xe60a;</i>查看详情</a>'
+                        + '<button class="layui-btn layui-btn-xs" onclick="showEdit(\''+row.orderid+'\')"><i class="layui-icon">&#xe705;</i>编辑流程</button>';
+                    if(row.orderstatus==0){
+                        html += '<button class="layui-btn layui-btn-xs layui-btn-primary" onclick="send(\''+ row.orderid +'\')" ><i class="layui-icon">&#xe657;</i>发货</button>'
+                    }else{
+                        html += '<button class="layui-btn layui-btn-xs layui-btn-disabled" ><i class="layui-icon">&#xe657;</i>已发货</button>'
+                    }
+                    return html;
+                }
+            },
+            {field:'orderid',width:100,align:'center',title:"订单编号"},
+            {field:'orderprice',width:20,align:'center',title:"订单总额"},
+            {field:'orderdesc',width:100,align:'center',title:"订单备注"},
+            {field:'ordertime',width:100,align:'center',title:"创建时间"},
+            {
+                field:'ordertype',
+                width:50,
+                title:'订单类型',
+                align:'center',
+                formatter:function(val,row){
+                    return val==1?'销售记录单':'用户单';
+                }
+            },
+            {
+                field:'orderstatus',
+                width:50,
+                title:'订单状态',
+                align:'center',
+                formatter:function(val,row){
+                    switch (val){
+                        case 0:return '未发货';
+                        case 1:return '已发货';
+                        case 2: return '已完成';
+                        default : return '未知状态';
+                    }
+                }
+            }
+        ]];
+        return columns;
+    }
+</script>
+</body>
+</html>

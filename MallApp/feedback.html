@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=0">
+
+    <title>反馈</title>
+    <link href="Contents/lib/AmazeUI-2.4.2/assets/css/admin.css" rel="stylesheet" type="text/css">
+    <link href="Contents/lib/AmazeUI-2.4.2/assets/css/amazeui.css" rel="stylesheet" type="text/css">
+
+    <link href="Contents/css/personal.css" rel="stylesheet" type="text/css">
+    <link href="Contents/css/infstyle.css" rel="stylesheet" type="text/css">
+    <link href="Contents/css/hmstyle.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="Contents/css/stepstyle.css">
+    <link rel="stylesheet" href="Contents/css/info.css">
+    <link rel="stylesheet" href="Contents/lib/layui/css/layui.css">
+
+    <script src="Contents/js/jquery.min.js"></script>
+    <script src="Contents/js/config.js"></script>
+    <script src="Contents/lib/lingshiframework/lingshi_base.js"></script>
+</head>
+
+<body>
+<!--头 -->
+<header>
+    <article>
+        <div class="mt-logo">
+            <!--顶部导航条 -->
+            <div id="ctrl-header-nav"></div>
+
+            <!--悬浮搜索框-->
+            <div class="nav white">
+                <div class="logoBig">
+                    <li><img src="Contents/images/logobig.png"/></li>
+                </div>
+
+                <div class="search-bar pr">
+                    <a name="index_none_header_sysc" href="#"></a>
+                    <form id="form-search" action="search.html">
+                        <input id="inp-goodskindid" name="goodskindid" type="hidden" value=""/>
+                        <input id="searchInput" name="goodsname" type="text" placeholder="搜索" autocomplete="off">
+                        <input id="ai-topsearch" class="submit am-btn" value="搜索" index="1" type="submit">
+                    </form>
+                </div>
+            </div>
+
+            <div class="clear"></div>
+        </div>
+    </article>
+</header>
+<!-- 物品分类组件 -->
+<div id="div-nav-goodskind"></div>
+<b class="line"></b>
+<div class="center">
+    <div class="col-main">
+        <div class="main-wrap">
+
+            <div class="am-cf am-padding">
+                <div class="am-fl am-cf"><strong class="am-text-danger am-text-lg">给予反馈</strong> /
+                    <small>Give me feedback</small>
+                </div>
+            </div>
+            <hr/>
+            <form class="am-form am-form-horizontal">
+                <div class="am-form-group">
+                    <label for="ta-feedback" class="am-form-label">我有意见</label>
+                    <div class="am-form-content">
+                        <textarea id="ta-feedback" style="width: 480px;height: 200px" placeholder="请输入您的宝贵意见（100字以内）"></textarea>
+                    </div>
+                </div>
+                <div class="info-btn">
+                    <div id="btn-save" class="am-btn am-btn-danger" style="margin-top:150px">保存修改</div>
+                </div>
+
+            </form>
+
+        </div>
+        <!--底部-->
+        <div class="footer">
+            <div class="footer-hd">
+                <p>
+                    <a href="#">恒望科技</a>
+                    <b>|</b>
+                    <a href="#">商城首页</a>
+                    <b>|</b>
+                    <a href="#">支付宝</a>
+                    <b>|</b>
+                    <a href="#">物流</a>
+                </p>
+            </div>
+            <div class="footer-bd">
+                <p>
+                    <a href="#">关于恒望</a>
+                    <a href="#">合作伙伴</a>
+                    <a href="#">联系我们</a>
+                    <a href="#">网站地图</a>
+                    <em>© 备个鬼案</em>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <aside class="menu">
+        <ul>
+            <li class="person">
+                <a href="index.html">个人中心</a>
+            </li>
+            <li class="person">
+                <a href="#">个人资料</a>
+                <ul>
+                    <li><a href="information.html">个人信息</a></li>
+                    <li><a href="safety.html">安全设置</a></li>
+                    <li><a href="address.html">收货地址</a></li>
+                </ul>
+            </li>
+            <li class="person">
+                <a href="#">我的交易</a>
+                <ul>
+                    <li><a href="order.html">订单管理</a></li>
+                    <li><a href="feedback.html">售后反馈</a></li>
+                </ul>
+            </li>
+        </ul>
+    </aside>
+</div>
+<script src="Contents/js/mall.dao.js"></script>
+<script src="Contents/lib/layui/layui.all.js"></script>
+<script src="Contents/js/mall.service.js"></script>
+</body>
+<script>
+    var headerService = new HeaderService();
+    var barService = new GoodsKindBarService();
+    var feedbackDao=new FeedbackDao();
+
+    $(function(){
+        headerService.init();
+        barService.init();
+    })
+
+    $('#btn-save').click(function(){
+        var feedbackcontent=$('#ta-feedback').val();
+        if(feedbackcontent==''){
+            return;
+        }
+        if(feedbackcontent.length>100){
+            layer.msg('虽然知道亲有许多话想对我说，但请简言告知哦~~（100字内）');
+            return;
+        }
+        feedbackDao.add({feedbackcontent:feedbackcontent},function(data){
+            layer.msg(data.msg);
+            if(data.code==1){
+                $('#ta-feedback').val('');
+            }
+        })
+    });
+</script>
+</html>

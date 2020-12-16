@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>商品分类列表</title>
+    <link rel="stylesheet" href="../../Contents/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="../../Contents/lib/easyui-theme/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../../Contents/lib/easyui-theme/themes/insdep/icon.css">
+    <script src="../../Contents/js/config.js"></script>
+    <script src="../../Contents/js/jquery.min.js"></script>
+    <script src="../../Contents/lib/easyui-theme/jquery.easyui.min.js"></script>
+    <script src="../../Contents/lib/easyui-theme/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../../Contents/js/easyui.util.js"></script>
+    <script src="../../Contents/lib/lingshiframework/lingshi_base.js"></script>
+    <script src="../../Contents/js/md5.js"></script>
+    <script src="../../Contents/js/layui.util.js"></script>
+</head>
+<body>
+<div class="easyui-layout" data-options='fit:"true"'>
+    <table id="table-goodskind"></table>
+</div>
+<script id="lay-goodskindform" type="text/html">
+    <div style="padding: 10px;">
+        <form class="layui-form layui-form-pane" id="form-goodskind">
+            <input id="opt-type" type="hidden" name="type" />
+            <input type="hidden" name="goodskindid" />
+            <div class="layui-form-item">
+                <label class="layui-form-label">名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="goodskindname" required  lay-verify="username" placeholder="请输入名称" data-valid="name:'名称',length:[1,20]" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">备注</label>
+                <div class="layui-input-block">
+                    <input type="text" name="goodskindnote" required  lay-verify="username" placeholder="请输入备注" data-valid="name:'备注',length:[1,20]" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item" style="text-align: right">
+                <button type="button" class="layui-btn" onclick="save()">保存</button>
+            </div>
+        </form>
+    </div>
+</script>
+<script src="../../Contents/lib/layui/layui.all.js"></script>
+<script>
+    $(function () {
+        initDataGrid();
+    })
+
+    //保存
+    function save() {
+        var postData=FormUtil.getFormMap("#form-goodskind");
+        if(postData==null||postData==''){
+            return;
+        }
+        var url=Config.UrlHead+'/goodsKind/add';
+        if(postData.type=='edit'){
+            url=Config.UrlHead+'/goodsKind/update';
+        }
+        $.post(url
+            ,postData
+            ,function (data) {
+                if(data.code==1){
+                    layer.closeAll();
+                }
+                layer.msg(data.msg);
+                $('#table-goodskind').datagrid('reload');
+            },'json')
+    }
+
+    //批量删除
+    function batchDelete() {
+        var rows = $('#table-goodskind').datagrid('getChecked');
+        if (rows.length < 1) {
+            return;
+        }
+        var ids = [];
+        for (var i = 0; i < rows.length; i++) {
+            ids.push(rows[i].goodskindid);
+        }
+        layer.confirm("是否确定删除", function (index) {
+            $.ajax({
+                url: Config.UrlHead + '/goodsKind/batchDelete',
+                contentType: "application/json ; charset=utf-8",
+                data: JSON.stringify(ids),
+                method: 'post',
+                dataType: 'json',
+                success: function (data) {
+                    layer.close(index);
+                    layer.msg(data.msg);
+                    $('#table-goodskind').datagrid('reload');
+                }
+            });
+        }, function (index) {
+            layer.close(index);
+        });
+    }
+
+    //点击删除事件
+    function del(id) {
+        var ids = [];
+        ids.push(id);
+        layer.confirm("是否确定删除", function (index) {
+            $.ajax({
+                url: Config.UrlHead + '/goodsKind/batchDelete',
+                contentType: "application/json ; charset=utf-8",
+                data: JSON.stringify(ids),
+                method: 'post',
+                dataType: 'json',
+                success: function (data) {
+                    layer.close(index);
+                    layer.msg(data.msg);
+                    $('#table-goodskind').datagrid('reload');
+                }
+            });
+        }, function (index) {
+            layer.close(index);
+        });
+    }
+
+    //展示添加
+    function showAddGoodsKind() {
+        layer.open({
+            type:1
+            ,title:'添加分类'
+            ,content:$('#lay-goodskindform').html()
+            ,success:function(){
+                FormUtil.loadForm('#form-goodskind',{type:'add'});
+                layui.form.render();
+            }
+        })
+    }
+
+    //展示编辑框
+    function showEdit(id){
+        var index = layer.open({type:3});
+        $.post(Config.UrlHead+'/goodsKind/single'
+            ,{goodskindid:id}
+            ,function (data) {
+                layer.close(index);
+                layer.open({
+                    type:1
+                    ,title:'修改分类'
+                    ,content:$('#lay-goodskindform').html()
+                    ,success:function(){
+                        data.data.type='edit';
+                        if(data.code==1){
+                            FormUtil.loadForm('#form-goodskind',data.data);
+                        }else {
+                            layer.msg(data.msg);
+                        }
+                        layui.form.render();
+                    }
+                })
+            },'json');
+    }
+
+    //初始化表格数据
+    function initDataGrid() {
+        EasyUIUtil.initDataGrid('#table-goodskind', Config.UrlHead + "/goodsKind/list",getColumns());
+        var pager=$('#table-goodskind').datagrid('getPager');
+        pager.pagination({
+            showPageList: true,
+            buttons: [{
+                iconCls: 'icon-add',
+                handler: function () {
+                    showAddGoodsKind();
+                }
+            }, {
+                iconCls: 'icon-remove',
+                handler: function () {
+                    batchDelete();
+                }
+            }],
+            onBeforeRefresh: function () {
+                return true;
+            }
+        });
+    }
+
+    //获取列
+    function getColumns(){
+        var columns=[[
+            {field:'ck',checkbox:true},
+            {
+                field:'goodskindid',
+                width:50,
+                align:'center',
+                title:"操作",
+                formatter:function(val,row){
+                    return '<button class="layui-btn layui-btn-xs layui-btn-danger" onclick="del(\'' + val + '\')"><i class="layui-icon">&#xe640;</i>移除</button>'
+                        +'<button class="layui-btn layui-btn-xs" onclick="showEdit(\'' + val + '\')"><i class="layui-icon">&#xe642;</i>编辑</button>'
+                }
+            },
+            {field:'goodskindname',width:100,align:'center',title:"名称"},
+            {field:'goodskindnote',width:100,align:'center',title:"备注"}
+        ]];
+        return columns;
+    }
+</script>
+</body>
+</html>

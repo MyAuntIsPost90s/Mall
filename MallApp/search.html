@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>搜索页面</title>
+    <link href="Contents/lib/AmazeUI-2.4.2/assets/css/amazeui.css" rel="stylesheet" type="text/css"/>
+    <link href="Contents/lib/AmazeUI-2.4.2/assets/css/admin.css" rel="stylesheet" type="text/css"/>
+    <link href="Contents/lib/basic/css/demo.css" rel="stylesheet" type="text/css"/>
+    <link href="Contents/css/skin.css" rel="stylesheet" type="text/css"/>
+    <link href="Contents/css/seastyle.css" rel="stylesheet" type="text/css"/>
+    <link href="Contents/css/hmstyle.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="Contents/lib/layui/css/layui.css">
+    <script src="Contents/js/jquery.min.js"></script>
+    <script src="Contents/js/config.js"></script>
+    <script src="Contents/lib/lingshiframework/lingshi_base.js"></script>
+    <style type="text/css">
+        #nav {
+            display: none;
+        }
+
+        .search-content {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+<!--顶部导航条 -->
+<div id="ctrl-header-nav"></div>
+
+<!--悬浮搜索框-->
+<div class="nav white">
+    <div class="logo"><img src="Contents/images/logo.png"/></div>
+    <div class="logoBig">
+        <li><img src="Contents/images/logobig.png"/></li>
+    </div>
+
+    <div class="search-bar pr">
+        <a name="index_none_header_sysc" href="#"></a>
+        <form id="form-search" action="search.html">
+            <input id="inp-goodskindid" name="goodskindid" type="hidden" value="" />
+            <input id="searchInput" name="goodsname" type="text" placeholder="搜索" autocomplete="off">
+            <input id="ai-topsearch" class="submit am-btn" value="搜索" index="1" type="submit">
+        </form>
+    </div>
+</div>
+
+<div class="clear"></div>
+<b class="line"></b>
+<!-- 物品分类组件 -->
+<div id="div-nav-goodskind"></div>
+<div class="search">
+    <div class="search-list">
+        <div class="am-g am-g-fixed">
+            <div class="am-u-sm-12 am-u-md-12">
+                <div class="searchAbout" style="display: none">
+                    <span class="font-pale">分类：</span>
+                </div>
+                <div class="search-content">
+                    <div class="sort">
+                        <li class="first" data-ordertype="2"><a title="综合">综合排序</a></li>
+                        <li data-ordertype="1"><a title="价格">价格优先</a></li>
+                    </div>
+                    <div class="clear"></div>
+                    <!-- 商品信息 -->
+                    <ul id="ul-boxes" class="am-avg-sm-3 am-avg-md-4 am-avg-lg-5 boxes"></ul>
+                </div>
+                <div class="clear"></div>
+
+                <!--分页 -->
+                <div style="text-align: center">
+                    <div id="div-page"></div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <div class="footer-hd">
+                <p>
+                    <a href="#">恒望科技</a>
+                    <b>|</b>
+                    <a href="#">商城首页</a>
+                    <b>|</b>
+                    <a href="#">支付宝</a>
+                    <b>|</b>
+                    <a href="#">物流</a>
+                </p>
+            </div>
+            <div class="footer-bd">
+                <p>
+                    <a href="#">关于恒望</a>
+                    <a href="#">合作伙伴</a>
+                    <a href="#">联系我们</a>
+                    <a href="#">网站地图</a>
+                    <em>© 备个鬼案</em>
+                </p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!--引导 -->
+<div class="navCir">
+    <li><a href="home.html"><i class="am-icon-home "></i>首页</a></li>
+    <li><a href="sort.html"><i class="am-icon-list"></i>分类</a></li>
+    <li><a href="shopcart.html"><i class="am-icon-shopping-basket"></i>购物车</a></li>
+    <li><a href="../person/index.html"><i class="am-icon-user"></i>我的</a></li>
+</div>
+
+<!--菜单 -->
+<div id="ctrl-menu"></div>
+
+<div class="theme-popover-mask"></div>
+
+<script id="lay-goods" type="text/html">
+    {{#  layui.each(d.rows, function(index, item){ }}
+    <li>
+        <div class="i-pic limit">
+            <a href="introduction.html?goodsid={{ item.goodsid }}">
+                <img src="{{ item.goodsimgurl==''?'Contents/images/imgsearch1.jpg':(Config.UrlHead + item.goodsimgurl) }}" width="218" height="218"/>
+            </a>
+            <p class="title fl">{{ item.goodsname }}</p>
+            <p class="price fl">
+                <b>¥</b>
+                <strong>{{ item.goodsprice }}</strong>
+            </p>
+            <p class="number fl">
+                库存<span>{{ item.goodscount }}</span>
+            </p>
+        </div>
+    </li>
+    {{# }) }}
+</script>
+
+<script src="Contents/js/mall.dao.js"></script>
+<script src="Contents/lib/layui/layui.all.js"></script>
+<script src="Contents/js/mall.service.js"></script>
+</body>
+<script>
+    function SearchService() {
+        var headerService = new HeaderService();
+        var menuService = new MenuService();
+        var barService = new GoodsKindBarService();
+
+        this.init = function () {
+            headerService.init();
+            menuService.init();
+            $.ajaxSetup({async: false});
+            barService.init();
+            $.ajaxSetup({async: true});
+
+            initGoods();
+            bindEvent();
+        }
+
+        //初始化物品信息
+        function initGoods(){
+            var goodskindid=LingShiUtil.getParam('goodskindid');
+            var goodsname=LingShiUtil.getParam('goodsname');
+            var goodskindname=$('li[data-goodskindid="'+ goodskindid +'"] .ml-22').html();
+
+            var orderType=$('.sort .first').attr('data-ordertype');
+            var params={};
+            params.orderType=orderType;
+            params.page=1;
+            params.rows=24;
+            if(goodskindid!=null&&goodskindid!=''){
+                params.goodskindid=goodskindid;
+                $('#inp-goodskindid').val(goodskindid);
+
+                if(goodskindname!=null&&goodskindname!='') {
+                    $('.searchAbout').show();
+                    $('.searchAbout a').remove();
+                    $('.searchAbout').append('<a href="search.html?goodskindid=' + goodskindid + '">' + goodskindname +'</a>')
+                }
+            }
+            if(goodsname!=null&&goodsname!=''){
+                params.goodsname=goodsname;
+                $('#searchInput').val(params.goodsname);
+            }
+            //加载数据
+            webappDao.getGoods(
+                params
+                ,function(data){
+                    if(data.code!=1){
+                        layer.msg(data.msg);
+                        return;
+                    }
+
+                    var temp=$('#lay-goods').html();
+                    layui.laytpl(temp).render(data.data, function(html){
+                        $('#ul-boxes').html(html);
+                    });
+
+                    params.total=data.data.total;
+                    loadDataByPage(params);
+                })
+        }
+
+        //绑定按钮事件
+        function bindEvent(){
+            $('.sort li').click(function(){
+                $('.sort li').removeClass('first');
+                $(this).addClass('first');
+                initGoods();
+            })
+        }
+
+        //加载分页数据
+        function loadDataByPage(params){
+            layui.laypage.render({
+                elem: 'div-page' //注意，这里的 test1 是 ID，不用加 # 号
+                , count: params.total //数据总数，从服务端得到
+                , curr:params.page
+                , limit:params.rows
+                , theme: '#1E9FFF'
+                ,jump: function(obj, first){
+                    if(first){
+                       return;
+                    }
+                    //加载数据
+                    params.page=obj.curr;
+                    webappDao.getGoods(
+                        params
+                        ,function(data){
+                            if(data.code!=1){
+                                layer.msg(data.msg);
+                                return;
+                            }
+
+                            var temp=$('#lay-goods').html();
+                            layui.laytpl(temp).render(data.data, function(html){
+                                $('#ul-boxes').html(html);
+                            });
+                            params.total=data.data.total
+                            loadDataByPage(params);
+                    })
+                }
+            });
+        }
+    }
+
+    var searchService = null;
+    $(function () {
+        searchService = new SearchService();
+        searchService.init();
+    })
+</script>
+<script src="Contents/lib/AmazeUI-2.4.2/assets/js/amazeui.min.js"></script>
+</html>

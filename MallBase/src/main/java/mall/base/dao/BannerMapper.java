@@ -1,6 +1,6 @@
 package mall.base.dao;
 
-import lingshi.mybaties.mapperextend.BaseMapper;
+import com.ch.common.mybatis.BaseMapper;
 import mall.base.model.Banner;
 
 public interface BannerMapper extends BaseMapper<Banner> {

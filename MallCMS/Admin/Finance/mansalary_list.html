@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>人员薪资列表</title>
+    <link rel="stylesheet" href="../../Contents/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="../../Contents/lib/easyui-theme/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../../Contents/lib/easyui-theme/themes/insdep/icon.css">
+    <script src="../../Contents/js/config.js"></script>
+    <script src="../../Contents/js/jquery.min.js"></script>
+    <script src="../../Contents/lib/easyui-theme/jquery.easyui.min.js"></script>
+    <script src="../../Contents/lib/easyui-theme/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../../Contents/js/easyui.util.js"></script>
+    <script src="../../Contents/lib/lingshiframework/lingshi_base.js"></script>
+    <script src="../../Contents/js/md5.js"></script>
+    <script src="../../Contents/js/layui.util.js"></script>
+</head>
+<body>
+<div class="easyui-layout" data-options='fit:"true"'>
+    <table id="table-userinfo" data-options="toolbar:'#tb-userinfo'"></table>
+    <div id="tb-userinfo">
+        <label class="layui-form-label layui-inline" style="width: 50px;height: 30px;line-height: 30px;padding: 0">月份：</label>
+        <input type="text" id="date-condition" class="layui-input layui-input-inline" placeholder="默认：全部" readonly style="width: 150px;height: 30px" />
+        <button onclick="search()" class="layui-btn layui-btn-sm layui-btn-primary" type="button"><i class="layui-icon">&#xe615;</i> 查看</button>
+    </div>
+</div>
+<script src="../../Contents/lib/layui/layui.all.js"></script>
+<script>
+    $(function () {
+        layui.laydate.render({
+            elem: '#date-condition' //指定元素
+            ,type:'month'
+            ,value:new Date()
+        });
+        initDataGrid();
+    })
+
+    //搜索
+    function search(){
+        var condition = $('#date-condition').val();
+        if(condition==''){
+            $('#table-userinfo').datagrid('load',{});
+            return;
+        }
+        $('#table-userinfo').datagrid('load',{date:condition});
+    }
+
+    //初始化表格数据
+    function initDataGrid() {
+        EasyUIUtil.initDataGrid('#table-userinfo', Config.UrlHead + "/userInfo/list4salary",getColumns(),{usertype:2,date:$('#date-condition').val()});
+        var pager=$('#table-userinfo').datagrid('getPager');
+        pager.pagination({
+            showPageList: true,
+            buttons: [],
+            onBeforeRefresh: function () {
+                return true;
+            }
+        });
+    }
+
+    //获取列
+    function getColumns(){
+        var columns=[[
+            {field:'username',width:100,align:'center',title:"用户名"},
+            {field:'realname',width:100,align:'center',title:"名称"},
+            {field:'wages',width:50,align:'center',title:"基本工资"},
+            {field:'allcount',width:50,align:'center',title:"销售/采购数量（件）"},
+            {
+                field:'allprice',
+                width:50,
+                align:'center',
+                title:"销售额",
+                formatter:function(val,row){
+                    if(row.usertype!=1){
+                        return 0;
+                    }
+                    return val;
+                }
+            },
+            {field:'allpercentage',width:50,align:'center',title:"总提成"},
+            {
+                field:'userid',
+                width:50,
+                align:'center',
+                title:"总计",
+                formatter:function(val,row){
+                    return row.wages+row.allpercentage;
+                }
+            },
+            {
+                field:'usertype',
+                width:50,
+                align:'center',
+                title:"职位",
+                formatter:function(val,row){
+                    return val==1?'分销':'采购';
+                }
+            }
+        ]];
+        return columns;
+    }
+</script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 package mall.base.dao;
 
-import lingshi.mybaties.mapperextend.BaseMapper;
+import com.ch.common.mybatis.BaseMapper;
 import mall.base.model.Syslog;
 
 public interface SyslogMapper extends BaseMapper<Syslog> {

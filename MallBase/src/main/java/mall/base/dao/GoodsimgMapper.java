@@ -2,7 +2,7 @@ package mall.base.dao;
 
 import java.util.List;
 
-import lingshi.mybaties.mapperextend.BaseMapper;
+import com.ch.common.mybatis.BaseMapper;
 import mall.base.model.Goodsimg;
 
 public interface GoodsimgMapper extends BaseMapper<Goodsimg> {

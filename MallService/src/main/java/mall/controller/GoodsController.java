@@ -1,22 +1,18 @@
 package mall.controller;
 
-import java.util.List;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import lingshi.web.model.RequestHolder;
+import com.ch.web.gateway.session.SessionHolder;
 import mall.base.model.Goods;
 import mall.base.model.Userinfo;
 import mall.base.model.dto.GoodsDto;
 import mall.service.GoodsService;
 import mall.uimodel.EUIPageList;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 @Controller
 @RequestMapping("/goods")
@@ -27,115 +23,81 @@ public class GoodsController {
 
 	/**
 	 * 获取集合列表
-	 * 
-	 * @param request
-	 * @param response
+	 *
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
-	public void list(HttpServletRequest request, HttpServletResponse response, Goods goods, int page, int rows) {
-		RequestHolder requestHolder = RequestHolder.get(request, response);
-		try {
-			EUIPageList<GoodsDto> list = goodsService.list(goods, page, rows);
-			requestHolder.success(list);
-		} catch (Exception e) {
-			requestHolder.err("操作失败", e);
-		}
+	public void list(Goods goods, int page, int rows) {
+		SessionHolder sessionHolder = SessionHolder.currentSessionHolder();
+		EUIPageList<GoodsDto> list = goodsService.list(goods, page, rows);
+		sessionHolder.success(list);
 	}
 
 	/**
 	 * 获取单条数据
-	 * 
-	 * @param request
-	 * @param response
-	 * @param userId
+	 *
+	 * @param goodsid
 	 */
 	@ResponseBody
 	@RequestMapping("/single")
-	public void single(HttpServletRequest request, HttpServletResponse response, String goodsid) {
-		RequestHolder requestHolder = RequestHolder.get(request, response);
-		try {
-			Goods goods = goodsService.single(goodsid);
-			requestHolder.success(goods);
-		} catch (Exception e) {
-			requestHolder.err("操作失败", e);
-		}
+	public void single(String goodsid) {
+		SessionHolder sessionHolder = SessionHolder.currentSessionHolder();
+		Goods goods = goodsService.single(goodsid);
+		sessionHolder.success(goods);
 	}
 
 	/**
 	 * 修改
-	 * 
-	 * @param request
-	 * @param response
-	 * @param userinfo
+	 *
+	 * @param goods
+	 * @param urls
 	 */
 	@ResponseBody
 	@RequestMapping("/update")
-	public void update(HttpServletRequest request, HttpServletResponse response, Goods goods, String urls) {
-		RequestHolder requestHolder = RequestHolder.get(request, response);
-		try {
-			goodsService.update(goods, urls);
-			requestHolder.success("操作成功", goods);
-		} catch (Exception e) {
-			requestHolder.err("操作失败", e);
-		}
+	public void update(Goods goods, String urls) {
+		SessionHolder sessionHolder = SessionHolder.currentSessionHolder();
+		goodsService.update(goods, urls);
+		sessionHolder.success("操作成功", goods);
 	}
 
 	/**
 	 * 修改数量（入库）
-	 * 
-	 * @param request
-	 * @param response
-	 * @param userinfo
+	 *
+	 * @param goods
 	 */
 	@ResponseBody
 	@RequestMapping("/update4count")
-	public void update4count(HttpServletRequest request, HttpServletResponse response, Goods goods, String urls) {
-		RequestHolder requestHolder = RequestHolder.get(request, response);
-		try {
-			Userinfo userinfo = (Userinfo) requestHolder.getClientUser();
-			goodsService.update4count(goods, userinfo.getUserid());
-			requestHolder.success("操作成功", goods);
-		} catch (Exception e) {
-			requestHolder.err("操作失败", e);
-		}
+	public void update4count(Goods goods) throws Exception {
+		SessionHolder sessionHolder = SessionHolder.currentSessionHolder();
+		Userinfo userinfo = (Userinfo) sessionHolder.getUserSession().getData();
+		goodsService.update4count(goods, userinfo.getUserid());
+		sessionHolder.success("操作成功", goods);
 	}
 
 	/**
 	 * 添加
-	 * 
-	 * @param request
-	 * @param response
-	 * @param userinfo
+	 *
+	 * @param goods
+	 * @param urls
 	 */
 	@ResponseBody
 	@RequestMapping("/add")
-	public void add(HttpServletRequest request, HttpServletResponse response, Goods goods, String urls) {
-		RequestHolder requestHolder = RequestHolder.get(request, response);
-		try {
-			goodsService.add(goods, urls);
-			requestHolder.success("操作成功");
-		} catch (Exception e) {
-			requestHolder.err("操作失败", e);
-		}
+	public void add(Goods goods, String urls) {
+		SessionHolder sessionHolder = SessionHolder.currentSessionHolder();
+		goodsService.add(goods, urls);
+		sessionHolder.success("操作成功");
 	}
 
 	/**
 	 * 批量删除
-	 * 
-	 * @param request
-	 * @param response
+	 *
 	 * @param ids
 	 */
 	@ResponseBody
 	@RequestMapping("/batchDelete")
-	public void batchDelete(HttpServletRequest request, HttpServletResponse response, @RequestBody List<String> ids) {
-		RequestHolder requestHolder = RequestHolder.get(request, response);
-		try {
-			goodsService.batchDelete(ids);
-			requestHolder.success("操作成功");
-		} catch (Exception e) {
-			requestHolder.err("操作失败", e);
-		}
+	public void batchDelete(@RequestBody List<String> ids) {
+		SessionHolder sessionHolder = SessionHolder.currentSessionHolder();
+		goodsService.batchDelete(ids);
+		sessionHolder.success("操作成功");
 	}
 }

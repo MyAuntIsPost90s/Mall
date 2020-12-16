@@ -1,22 +1,18 @@
 package mall.controller;
 
-import java.util.List;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import lingshi.web.model.RequestHolder;
+import com.ch.web.gateway.session.SessionHolder;
 import mall.base.model.Feedback;
 import mall.base.model.Userinfo;
 import mall.base.model.dto.FeedbackUserDto;
 import mall.service.FeedbackService;
 import mall.uimodel.EUIPageList;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 @Controller
 @RequestMapping("feedback")
@@ -27,61 +23,43 @@ public class FeedbackController {
 
 	/**
 	 * 获取集合接口
-	 * 
-	 * @param request
-	 * @param response
+	 *
 	 * @param feedback
 	 * @param page
 	 * @param rows
 	 */
 	@ResponseBody
 	@RequestMapping("list")
-	public void list(HttpServletRequest request, HttpServletResponse response, Feedback feedback, int page, int rows) {
-		RequestHolder requestHolder = RequestHolder.get(request, response);
-		try {
-			EUIPageList<FeedbackUserDto> list = feedbackService.list(feedback, page, rows);
-			requestHolder.success(list);
-		} catch (Exception e) {
-			requestHolder.err("操作失败", e);
-		}
+	public void list(Feedback feedback, int page, int rows) {
+		SessionHolder sessionHolder = SessionHolder.currentSessionHolder();
+		EUIPageList<FeedbackUserDto> list = feedbackService.list(feedback, page, rows);
+		sessionHolder.success(list);
 	}
 
 	/**
 	 * 添加
-	 * 
-	 * @param request
-	 * @param response
-	 * @param userinfo
+	 *
+	 * @param feedback
 	 */
 	@ResponseBody
 	@RequestMapping("/add")
-	public void add(HttpServletRequest request, HttpServletResponse response, Feedback feedback) {
-		RequestHolder requestHolder = RequestHolder.get(request, response);
-		try {
-			Userinfo userinfo = (Userinfo) requestHolder.getClientUser();
-			feedbackService.add(feedback, userinfo.getUserid());
-			requestHolder.success("操作成功");
-		} catch (Exception e) {
-			requestHolder.err("操作失败", e);
-		}
+	public void add(Feedback feedback) {
+		SessionHolder sessionHolder = SessionHolder.currentSessionHolder();
+		Userinfo userinfo = (Userinfo) sessionHolder.getUserSession().getData();
+		feedbackService.add(feedback, userinfo.getUserid());
+		sessionHolder.success("操作成功");
 	}
 
 	/**
 	 * 批量删除
-	 * 
-	 * @param request
-	 * @param response
+	 *
 	 * @param ids
 	 */
 	@ResponseBody
 	@RequestMapping("batchDelete")
-	public void batchDelete(HttpServletRequest request, HttpServletResponse response, @RequestBody List<String> ids) {
-		RequestHolder requestHolder = RequestHolder.get(request, response);
-		try {
-			feedbackService.batchDelete(ids);
-			requestHolder.success("操作成功");
-		} catch (Exception e) {
-			requestHolder.err("操作失败", e);
-		}
+	public void batchDelete(@RequestBody List<String> ids) {
+		SessionHolder sessionHolder = SessionHolder.currentSessionHolder();
+		feedbackService.batchDelete(ids);
+		sessionHolder.success("操作成功");
 	}
 }

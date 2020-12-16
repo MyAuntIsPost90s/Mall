@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>商品编辑</title>
+    <link rel="stylesheet" href="../../Contents/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="../../Contents/lib/easyui-theme/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../../Contents/lib/easyui-theme/themes/insdep/icon.css">
+    <script src="../../Contents/js/config.js"></script>
+    <script src="../../Contents/js/jquery.min.js"></script>
+    <script src="../../Contents/lib/easyui-theme/jquery.easyui.min.js"></script>
+    <script src="../../Contents/lib/easyui-theme/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../../Contents/js/easyui.util.js"></script>
+    <script src="../../Contents/lib/lingshiframework/lingshi_base.js?version=0.0.3"></script>
+    <script src="../../Contents/js/md5.js"></script>
+    <script src="../../Contents/js/layui.util.js"></script>
+</head>
+<body>
+<div class="easyui-layout" data-options='fit:"true"'>
+    <div data-options='region:"east"' style="width: 320px">
+        <form class="layui-form" id="form-goods" style="padding: 10px">
+            <input name="goodsid" type="hidden" />
+            <div class="layui-form-item">
+                <label class="layui-form-label layui-inline" style="width: 50px">名称</label>
+                <div class="layui-input-inline" style="width: 170px;">
+                    <input type="text" name="goodsname" placeholder="请输入商品名称" data-valid="name:'商品名称',length:[1,20]"
+                           autocomplete="off" class="layui-input"  />
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label layui-inline" style="width: 50px">预览图</label>
+                <div class="layui-input-inline" style="width: 170px;">
+                    <img id="img-goodsimg" src="../../Contents/images/dftgoods.png" width="100%" data-src="" />
+                    <button id="btn-goodsfirstimg" type="button" class="layui-btn layui-btn-sm layui-btn-normal" style="width: 100%;margin: 5px 0"><i class="layui-icon">&#xe681;</i>上传</button>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label layui-inline" style="width: 50px">轮播图</label>
+                <div class="layui-input-inline" style="width: 170px;">
+                    <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" onclick="setBanner()" style="width: 100%;margin: 5px 0"><i class="layui-icon">&#xe64a;</i>设置轮播图</button>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label layui-inline" style="width: 50px">成本</label>
+                <div class="layui-input-inline" style="width: 170px;">
+                    <input type="number" value="0" name="goodscost" placeholder="请输入成本" data-valid="name:'成本',length:[1,5]"
+                           autocomplete="off" class="layui-input"  />
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label layui-inline" style="width: 50px">售价</label>
+                <div class="layui-input-inline" style="width: 170px;">
+                    <input type="number" value="0" name="goodsprice" placeholder="请输入售价" data-valid="name:'售价',length:[1,5]"
+                           autocomplete="off" class="layui-input"  />
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label layui-inline" style="width: 50px">库存</label>
+                <div class="layui-input-inline" style="width: 170px;">
+                    <input type="number" value="0" name="goodscount" placeholder="请输入库存" data-valid="name:'库存',length:[1,5]"
+                           autocomplete="off" class="layui-input"  />
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label layui-inline" style="width: 50px">提成</label>
+                <div class="layui-input-inline" style="width: 170px;">
+                    <input type="number" value="0" name="goodspercentage" placeholder="请输入提成" data-valid="name:'提成',length:[1,5]"
+                           autocomplete="off" class="layui-input"  />
+                </div>
+            </div>
+            <div class="layui-form-item" style="text-align: right;padding:0 25px">
+                <button type="button" class="layui-btn layui-btn-sm" onclick="save()"><i class="layui-icon">&#xe618;</i>保存</button>
+            </div>
+        </form>
+    </div>
+    <div id="div-paper" data-options='region:"center"'>
+        <textarea id="ta-goodscontent" style="display: none;"></textarea>
+    </div>
+</div>
+
+<script id="lay-win-goodsimg" type="text/html">
+    <div style="width: 100%;height:350px">
+        <table class="layui-table" lay-skin="line" style="margin:-1px 0">
+            <colgroup>
+                <col width="50">
+                <col width="200">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>操作</th>
+                <th>图片</th>
+            </tr>
+            </thead>
+        </table>
+        <div style="height: 270px;overflow-y: auto;border: 1px solid #e6e6e6;">
+            <table class="layui-table" lay-skin="line" style="margin: 0">
+                <colgroup>
+                    <col width="50">
+                    <col width="200">
+                </colgroup>
+                <tbody id="tb-goodsimg"></tbody>
+            </table>
+        </div>
+        <button type="button" id="btn-goodsimg" class="layui-btn layui-btn-normal" style="float: right;margin: 5px"><i class="layui-icon">&#xe681;</i>上传</button>
+    </div>
+</script>
+<script id="lay-list-goodsimg" type="text/html">
+    {{#  layui.each(d, function(index, item){ }}
+    {{#  if(item != ''){ }}
+        <tr data-src="{{ item }}">
+            <td><button class="layui-btn layui-btn-xs layui-btn-danger" onclick="$(this).parent().parent().remove()"><i class="layui-icon">&#xe640;</i>移除</button></td>
+            <td><img src="{{ Config.UrlHead + item }}" width="200px"/></td>
+        </tr>
+    {{#  } }}
+    {{# }); }}
+</script>
+</body>
+<script src="../../Contents/lib/layui/layui.all.js"></script>
+<script>
+    var pageType='add';
+    var layedittag=-1;
+    var urls='';
+    var goodskindid='';
+    $(function(){
+        goodskindid=LingShiUtil.getParam("goodskindid");
+        pageType=LingShiUtil.getParam("type");
+        layedittag=EditModel.build('ta-goodscontent',{height:(window.innerHeight-50)+"px"}); //建立编辑器
+
+        initGoodsFirstImgUploader();    //初始化预览图上传组件
+
+        if(pageType=='edit'){
+            loadEditInfo();
+        }
+    })
+
+    //加载编辑信息
+    function loadEditInfo(){
+        var goodsid=LingShiUtil.getParam("goodsid");
+        $.post(Config.UrlHead+'/goods/single'
+            ,{goodsid:goodsid}
+            ,function(data){
+                if(data.code!=1){
+                    layer,msg(data.msg);
+                    return;
+                }
+                goodskindid=data.data.goodskindid;
+                if(data.data.goodsimgurl!=null&&data.data.goodsimgurl!=''){
+                    $('#img-goodsimg').attr("data-src", data.data.goodsimgurl);
+                    $('#img-goodsimg').attr("src",Config.UrlHead + data.data.goodsimgurl);
+                }
+                EditModel.setContent(layedittag,data.data.goodscontents);
+                if(data.data.goodsimgs!=null&&data.data.goodsimgs.length>0){
+                    for(var i=0;i<data.data.goodsimgs.length;i++) {
+                        urls += data.data.goodsimgs[i].goodsimgurl+','
+                    }
+                }
+                FormUtil.loadForm("#form-goods",data.data);
+            },'json');
+    }
+
+    //保存
+    function save(){
+        if(goodskindid==''||goodskindid==null){
+            layer.msg('商品类别错误');
+            return;
+        }
+        var postData=FormUtil.getFormMap("#form-goods");
+        if(postData==null||postData==''){
+            return;
+        }
+        if(urls==''||urls==null){
+            layer.msg('请至少上传一张商品轮播图');
+            return;
+        }
+
+        postData.goodscontents=EditModel.getContent(layedittag);
+        postData.goodsimgurl=$('#img-goodsimg').attr("data-src");
+        postData.urls=urls.substring(0,urls.length-1);
+        postData.goodskindid=goodskindid;
+        var url=Config.UrlHead+'/goods/add';
+        if(pageType=='edit'){
+            url=Config.UrlHead+'/goods/update';
+        }
+        $.post(url
+            ,postData
+            ,function (data) {
+                if(data.code!=1){
+                    layer.msg(data.msg);
+                    return;
+                }
+                layer.open({
+                    type: 1
+                    , area: ['200px','120px']
+                    , time: 2000
+                    , title: '提示'
+                    , content: '<div style="text-align: center;font-size: 14px;line-height: 50px">保存成功，正在跳转...</div>'
+                    , end: function () {
+                        window.opener = null;
+                        window.close();
+                    }
+                })
+            },'json')
+    }
+
+    //设置轮播图
+    function setBanner(){
+        layer.open({
+            type:1
+            ,area:['500px','400px']
+            ,title:'编辑轮播图'
+            ,content:$('#lay-win-goodsimg').html()
+            ,success:function(){
+                var arr = urls.split(',');
+                if(arr==null||arr.length<1){
+                    return;
+                }
+                var temp =$('#lay-list-goodsimg').html();
+                layui.laytpl(temp).render(arr, function(html){
+                    $('#tb-goodsimg').html(html);
+                });
+                initGoodsImgUploader();
+            }
+            ,cancel:function () {
+                urls='';
+                $('#tb-goodsimg tr').each(function(){
+                    var url = $(this).attr('data-src');
+                    if(url!=null&&url!=''){
+                        urls+=url+','
+                    }
+                });
+            }
+        })
+    }
+
+    //初始化上传预览图
+    function initGoodsFirstImgUploader() {
+        layui.upload.render({
+            elem: '#btn-goodsfirstimg' //绑定元素
+            , accept: 'images'
+            , data: {basePath:'/Uploadfile/goodsfirstimg/'}
+            , url: Config.UrlHead + '/uploader/upload' //上传接口
+            , done: function (res) {
+                $('#img-goodsimg').attr("data-src", res.data);
+                $('#img-goodsimg').attr("src",Config.UrlHead + res.data);
+            }
+        });
+    }
+
+    //初始化上传图片
+    function initGoodsImgUploader() {
+        layui.upload.render({
+            elem: '#btn-goodsimg' //绑定元素
+            , accept: 'images'
+            , data: {basePath:'/Uploadfile/goodsimg/'}
+            , url: Config.UrlHead + '/uploader/upload' //上传接口
+            , done: function (res) {
+                var tr='<tr data-src="'+res.data+'"><td><button class="layui-btn layui-btn-xs layui-btn-danger"><i class="layui-icon">&#xe640;</i>移除</button></td><td><img src="'+ Config.UrlHead+res.data +'" width="300px""></td></tr>'
+                $('#tb-goodsimg').append(tr);
+            }
+        });
+    }
+</script>
+</html>

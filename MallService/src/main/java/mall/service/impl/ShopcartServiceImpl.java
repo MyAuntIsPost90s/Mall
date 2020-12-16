@@ -7,8 +7,8 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
-import com.github.miemiedev.mybatis.paginator.domain.PageList;
+import mall.common.page.PageList;
+import mall.common.page.QueryPageListProxy;
 
 import mall.base.dao.ShopcartMapper;
 import mall.base.model.Shopcart;
@@ -28,14 +28,14 @@ public class ShopcartServiceImpl implements ShopcartService {
 
 	@Override
 	public EUIPageList<ShopcartGoodsDto> list(Shopcart shopcart, int page, int rows) {
-		PageList<Shopcart> pageList = shopcartMapper.getListWithPage(shopcart, new PageBounds(page, rows));
+		PageList<Shopcart> pageList = QueryPageListProxy.query(()-> shopcartMapper.getList(shopcart), page, rows);
 		List<ShopcartGoodsDto> result = new ArrayList<ShopcartGoodsDto>();
-		for (Shopcart item : pageList) {
+		for (Shopcart item : pageList.getRows()) {
 			ShopcartGoodsDto shopcartGoodsDto = new ShopcartGoodsDto(item);
 			shopcartGoodsDto.setGoods(goodsService.single(item.getGoodsid()));
 			result.add(shopcartGoodsDto);
 		}
-		return new EUIPageList<ShopcartGoodsDto>(pageList.getPaginator().getTotalCount(), result);
+		return new EUIPageList<>(pageList.getTotal(), result);
 	}
 
 	@Override
